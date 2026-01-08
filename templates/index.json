@@ -9,6 +9,16 @@
  */
 {
   "sections": {
+    "custom_liquid_jyfUzn": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<div style=\"width: 100%; margin: 0; padding: 0; line-height: 0; overflow: hidden;\">\n  <video autoplay loop muted playsinline poster=\"\" style=\"width: 100%; height: auto; display: block; object-fit: cover;\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/47a670f54b61410d90503887294ebc6e.mov\" type=\"video/quicktime\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/47a670f54b61410d90503887294ebc6e.mov\" type=\"video/mp4\">\n    Your browser does not support the video tag.\n  </video>\n</div>",
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
     "image_banner": {
       "type": "image-banner",
       "blocks": {
@@ -238,15 +248,27 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "custom_liquid_nBaU6K": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<div style=\"width: 100%; margin: 0; padding: 0; line-height: 0; overflow: hidden;\">\n  <video autoplay loop muted playsinline poster=\"\" style=\"width: 100%; height: auto; display: block; object-fit: cover;\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/47a670f54b61410d90503887294ebc6e.mov\" type=\"video/quicktime\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/47a670f54b61410d90503887294ebc6e.mov\" type=\"video/mp4\">\n    Your browser does not support the video tag.\n  </video>\n</div>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
+    "custom_liquid_jyfUzn",
     "image_banner",
     "rich_text",
     "featured_collection",
     "collage",
     "video",
     "multicolumn",
-    "video_zp983X"
+    "video_zp983X",
+    "custom_liquid_nBaU6K"
   ]
 }
