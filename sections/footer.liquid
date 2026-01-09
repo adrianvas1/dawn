@@ -25,6 +25,41 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* Stiluri pentru pictograme colorate Lumoir Studio */
+  .footer__list-social.list-social:only-child {
+    justify-content: center;
+  }
+
+  .list-social__item .link {
+    padding: 1rem;
+    transition: transform 0.2s ease-in-out, filter 0.2s ease;
+  }
+
+  /* Efect de "Pop" la hover */
+  .list-social__item:hover {
+    transform: scale(1.2);
+  }
+
+  /* Culoarea oficială Facebook */
+  .list-social__link--facebook {
+    color: #1877F2 !important;
+  }
+
+  /* Gradientul oficial Instagram */
+  .list-social__link--instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+
+  /* Adăugăm o umbră discretă pentru a le face să pară premium */
+  .list-social__item .icon {
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));
+    width: 2.5rem; /* Le facem puțin mai mari */
+    height: 2.5rem;
+  }
 {%- endstyle -%}
 
 <footer class="footer color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
