@@ -184,16 +184,6 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
-    },
-    "custom_liquid_nBaU6K": {
-      "type": "custom-liquid",
-      "name": "t:sections.custom-liquid.presets.name",
-      "settings": {
-        "custom_liquid": "<div style=\"width: 100%; margin: 0; padding: 0; line-height: 0; overflow: hidden;\">\n  <video autoplay loop muted playsinline poster=\"\" style=\"width: 100%; height: auto; display: block; object-fit: cover;\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/47a670f54b61410d90503887294ebc6e.mov\" type=\"video/quicktime\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/47a670f54b61410d90503887294ebc6e.mov\" type=\"video/mp4\">\n    Your browser does not support the video tag.\n  </video>\n</div>",
-        "color_scheme": "",
-        "padding_top": 40,
-        "padding_bottom": 52
-      }
     }
   },
   "order": [
@@ -202,7 +192,6 @@
     "featured_collection",
     "collage",
     "multicolumn",
-    "video_zp983X",
-    "custom_liquid_nBaU6K"
+    "video_zp983X"
   ]
 }
