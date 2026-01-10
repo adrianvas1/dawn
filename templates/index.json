@@ -89,8 +89,50 @@
         "padding_bottom": 36
       }
     },
+    "collection_list_f6zytp": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_baBBxa": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "candles-example-products"
+          }
+        },
+        "featured_collection_hPitEi": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "jesmonite-decor"
+          }
+        },
+        "featured_collection_VEnCGj": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": ""
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_baBBxa",
+        "featured_collection_hPitEi",
+        "featured_collection_VEnCGj"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "Collections",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "featured_collection": {
       "type": "featured-collection",
+      "disabled": true,
       "settings": {
         "collection": "all",
         "products_to_show": 8,
@@ -190,6 +232,7 @@
     "custom_liquid_jyfUzn",
     "rich_text",
     "image_with_text_j6NnFe",
+    "collection_list_f6zytp",
     "featured_collection",
     "multicolumn",
     "video_zp983X"
