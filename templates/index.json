@@ -13,10 +13,57 @@
       "type": "custom-liquid",
       "name": "t:sections.custom-liquid.presets.name",
       "settings": {
-        "custom_liquid": "<div class=\"video-banner-wrapper\" style=\"position: relative; width: 100%; overflow: hidden; line-height: 0;\">\n  <video autoplay loop muted playsinline style=\"width: 100%; height: auto; display: block; object-fit: cover; min-height: 350px;\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/d46761e70ed24c74ab9883b829196814.mov\" type=\"video/quicktime\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/d46761e70ed24c74ab9883b829196814.mov\" type=\"video/mp4\">\n  </video>\n\n  <div class=\"video-overlay-content\">\n    <h1 class=\"banner-title\">LUMOIR STUDIO</h1>\n    <p class=\"banner-subtitle\">Premium handmade decor</p>\n    <a href=\"/collections/all\" class=\"banner-button\">Descoperă colecția</a>\n  </div>\n</div>\n\n<style>\n  .video-overlay-content {\n    position: absolute;\n    left: 50%;\n    bottom: 15%; \n    transform: translateX(-50%);\n    width: 100%;\n    text-align: center;\n    color: #ffffff;\n    z-index: 2;\n    padding: 0 20px;\n  }\n\n  /* Titlu scalat la 50% */\n  .banner-title {\n    font-family: \"cabrito-didone\", serif; \n    font-size: clamp(12px, 2.5vw, 21px);\n    font-weight: 400;\n    margin: 0;\n    letter-spacing: 0.5em;\n    text-transform: uppercase;\n    line-height: 1.2;\n    color: #ffffff;\n  }\n\n  /* Subtitlu scalat la 50% */\n  .banner-subtitle {\n    font-size: clamp(8px, 1vw, 10px); \n    font-family: sans-serif;\n    margin: 15px 0 30px 0;\n    letter-spacing: 0.2em;\n    opacity: 0.9;\n    color: #ffffff;\n  }\n\n  /* Buton - Revenire la dimensiunile originale */\n  .banner-button {\n    display: inline-block;\n    padding: 12px 35px; /* Dimensiune originală */\n    font-size: 14px;    /* Dimensiune originală */\n    font-family: sans-serif;\n    text-transform: uppercase;\n    letter-spacing: 0.2em;\n    color: #ffffff;\n    text-decoration: none;\n    border: 1px solid #ffffff;\n    background: transparent;\n    transition: all 0.3s ease;\n  }\n\n  .banner-button:hover {\n    background-color: rgba(255, 255, 255, 0.3);\n    color: #000000; /* Revine la text negru pe hover conform stilului anterior */\n  }\n\n  @media (max-width: 749px) {\n    .banner-title {\n      letter-spacing: 0.3em;\n      font-size: 14px;\n    }\n    .banner-button {\n      padding: 10px 25px;\n      font-size: 12px;\n    }\n  }\n</style>",
+        "custom_liquid": "<div class=\"video-banner-wrapper\">\n  <video autoplay loop muted playsinline class=\"banner-video\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/d46761e70ed24c74ab9883b829196814.mov\" type=\"video/quicktime\">\n    <source src=\"https://cdn.shopify.com/videos/c/o/v/d46761e70ed24c74ab9883b829196814.mov\" type=\"video/mp4\">\n  </video>\n\n  <div class=\"video-overlay-content\">\n    <h1 class=\"banner-title\">LUMOIR STUDIO</h1>\n    <p class=\"banner-subtitle\">Premium handmade decor</p>\n    <a href=\"/collections/all\" class=\"banner-button\">Descoperă colecția</a>\n  </div>\n</div>\n\n<style>\n  /* --- MODIFICARE 1: Controlul Înălțimii Containerului --- */\n  .video-banner-wrapper {\n    position: relative;\n    width: 100%;\n    overflow: hidden;\n    line-height: 0;\n    /* Setăm o înălțime maximă (75% din înălțimea ecranului) pentru a-l face mai scurt */\n    max-height: 75vh;\n    display: flex;\n    align-items: center; /* Centrează video-ul vertical dacă e tăiat */\n    justify-content: center;\n  }\n\n  /* --- MODIFICARE 2: Adăugare Vignette / Gradient întunecat --- */\n  .video-banner-wrapper::after {\n    content: '';\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    /* Gradientul: transparent sus (0%), devine negru cu opacitate 0.5 jos (100%) */\n    background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.5) 100%);\n    z-index: 1; /* Se așează peste video, dar sub text */\n    pointer-events: none; /* Permite click-urile să treacă prin el */\n  }\n\n  /* Stilurile video-ului */\n  .banner-video {\n    width: 100%;\n    height: auto;\n    display: block;\n    object-fit: cover;\n    /* Am redus puțin și înălțimea minimă pentru mobil (de la 350px la 300px) */\n    min-height: 300px;\n  }\n\n  /* Conținutul textului - Z-index mărit */\n  .video-overlay-content {\n    position: absolute;\n    left: 50%;\n    bottom: 10%; \n    transform: translateX(-50%);\n    width: 100%;\n    text-align: center;\n    color: #ffffff;\n    /* Important: trebuie să fie mai mare decât z-index-ul vignettei (care e 1) */\n    z-index: 2;\n    padding: 0 20px;\n  }\n\n  /* Titlu scalat la 50% */\n  .banner-title {\n    font-family: \"cabrito-didone\", serif; \n    font-size: clamp(12px, 2.5vw, 21px);\n    font-weight: 400;\n    margin: 0;\n    letter-spacing: 0.5em;\n    text-transform: uppercase;\n    line-height: 1.2;\n    color: #ffffff;\n  }\n\n  /* Subtitlu scalat la 50% */\n  .banner-subtitle {\n    font-size: clamp(8px, 1vw, 10px); \n    font-family: sans-serif;\n    margin: 15px 0 30px 0;\n    letter-spacing: 0.2em;\n    opacity: 0.9;\n    color: #ffffff;\n  }\n\n  /* Buton - Dimensiuni originale */\n  .banner-button {\n    display: inline-block;\n    padding: 12px 35px; \n    font-size: 14px;    \n    font-family: sans-serif;\n    text-transform: uppercase;\n    letter-spacing: 0.2em;\n    color: #ffffff;\n    text-decoration: none;\n    border: 1px solid #ffffff;\n    background: transparent;\n    transition: all 0.3s ease;\n  }\n\n  .banner-button:hover {\n    background-color: rgba(255, 255, 255, 0.3);\n    color: #000000; \n  }\n\n  @media (max-width: 749px) {\n    /* Pe mobil permitem bannerului să fie puțin mai înalt dacă e nevoie */\n    .video-banner-wrapper {\n        max-height: 85vh;\n    }\n    .banner-title {\n      letter-spacing: 0.3em;\n      font-size: 14px;\n    }\n    .banner-button {\n      padding: 10px 25px;\n      font-size: 12px;\n    }\n  }\n</style>",
         "color_scheme": "",
         "padding_top": 0,
         "padding_bottom": 0
+      }
+    },
+    "image_with_text_j6NnFe": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_egecYP": {
+          "type": "heading",
+          "settings": {
+            "heading": "Image with text",
+            "heading_size": "h1"
+          }
+        },
+        "text_kGfaEX": {
+          "type": "text",
+          "settings": {
+            "text": "<p>La <strong>Lumoir Studio</strong>, creăm manual lumânări din ceară de soia și obiecte de decor din materiale naturale, non-toxice și sustenabile. Îmbinăm designul premium cu grija pentru sănătatea dumneavoastră, oferind produse sigure și rafinate, menite să aducă un plus de eleganță și liniște în fiecare zi.</p><p></p>",
+            "text_style": "body"
+          }
+        },
+        "button_F4CQg8": {
+          "type": "button",
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_egecYP",
+        "text_kGfaEX",
+        "button_F4CQg8"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "height": "adapt",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "rich_text": {
@@ -33,7 +80,7 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>La <strong>Lumoir Studio</strong>, creăm manual lumânări din ceară de soia și obiecte de decor din materiale naturale, non-toxice și sustenabile. Îmbinăm designul premium cu grija pentru sănătatea dumneavoastră, oferind produse sigure și rafinate, menite să aducă un plus de eleganță și liniște în fiecare zi.</p><p></p>"
+            "text": ""
           }
         }
       },
@@ -188,6 +235,7 @@
   },
   "order": [
     "custom_liquid_jyfUzn",
+    "image_with_text_j6NnFe",
     "rich_text",
     "featured_collection",
     "collage",
