@@ -59,10 +59,10 @@
         "collapsible-row-0": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Materials",
+            "heading": "Materiale",
             "icon": "leather",
-            "content": "<p>{{ block.settings.page.metafields.custom.materiale_lumanari | metafield_tag }}</p>",
-            "page": ""
+            "content": "",
+            "page": "materiale-calitate"
           }
         },
         "collapsible-row-1": {
