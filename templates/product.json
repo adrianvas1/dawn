@@ -68,16 +68,16 @@
         "collapsible-row-1": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Shipping & Returns",
+            "heading": "Livrare și retur",
             "icon": "truck",
             "content": "",
-            "page": ""
+            "page": "livrare-retur"
           }
         },
         "collapsible-row-2": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Dimensions",
+            "heading": "Dimensiuni",
             "icon": "ruler",
             "content": "{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'lungime' }}{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'latime' }}{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'inaltime' }}",
             "page": ""
@@ -86,7 +86,7 @@
         "collapsible-row-3": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Care Instructions",
+            "heading": "Ghid de îngrijire",
             "icon": "heart",
             "content": "",
             "page": "ghid-ingrijire"
