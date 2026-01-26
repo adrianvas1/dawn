@@ -45,7 +45,7 @@
         ".footer__copyright {opacity: 0.6; letter-spacing: 0.1rem; text-transform: uppercase; font-size: 0.9rem;}"
       ],
       "settings": {
-        "color_scheme": "scheme-1",
+        "color_scheme": "scheme-2",
         "newsletter_enable": true,
         "newsletter_heading": "Subscribe to our emails",
         "enable_follow_on_shop": true,
