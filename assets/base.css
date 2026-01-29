@@ -12,7 +12,7 @@
   display: block !important;
   visibility: visible !important;
   padding: 1.5rem 0;
-  font-size: 1rem;
+  font-size: 2rem;
   color: rgb(var(--color-scheme-6-text));
   opacity: 1 !important;
 }
