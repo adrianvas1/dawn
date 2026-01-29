@@ -8,16 +8,33 @@
   --focused-base-box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0.5rem 0.4rem rgba(var(--color-foreground), 0.3);
 }
 .breadcrumbs {
-  padding: 1rem 0;
-  font-size: 0.9rem;
+  padding: 1rem 0 2rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 400;
 }
+
 .breadcrumbs a {
-  color: #666;
+  color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
+
 .breadcrumbs a:hover {
-  text-decoration: underline;
+  color: rgba(255, 255, 255, 0.8);
 }
+
+.breadcrumbs span[aria-hidden="true"] {
+  margin: 0 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.7rem;
+}
+
+.breadcrumbs span:last-child {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .product-card-wrapper .card,
 .contains-card--product {
   --border-radius: var(--product-card-corner-radius);
