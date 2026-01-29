@@ -21,18 +21,18 @@
             "menu": "footer"
           }
         },
-        "link_list_PtDrAr": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Quick links",
-            "menu": "footer"
-          }
-        },
         "footer-1": {
           "type": "link_list",
           "settings": {
             "heading": "Info",
             "menu": "footer-menu-info"
+          }
+        },
+        "text_AajDbc": {
+          "type": "text",
+          "settings": {
+            "heading": "Date comerciale",
+            "subtext": "<p><strong>Vas Ioan Adrian PFA<br/>CUI:</strong> [Please enter your CUI/CIF number]<br/>Cluj Napoca, Cluj</p>"
           }
         },
         "footer-2": {
@@ -45,8 +45,8 @@
       },
       "block_order": [
         "link_list_9PWKwx",
-        "link_list_PtDrAr",
         "footer-1",
+        "text_AajDbc",
         "footer-2"
       ],
       "custom_css": [
