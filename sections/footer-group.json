@@ -32,7 +32,7 @@
           "type": "text",
           "settings": {
             "heading": "Date comerciale",
-            "subtext": "<p><strong>Vas Ioan Adrian PFA<br/>CUI:</strong> [Please enter your CUI/CIF number]<br/>Cluj Napoca, Cluj</p>"
+            "subtext": "<h5><strong>Vas Ioan Adrian PFA<br/>CUI:</strong> [Please enter your CUI/CIF number]<br/>Cluj Napoca, Cluj</h5>"
           }
         },
         "footer-2": {
