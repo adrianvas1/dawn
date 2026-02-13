@@ -41,6 +41,10 @@
   font-weight: 500;
 }
 
+.header__heading-logo img {
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 .product-card-wrapper .card,
 .contains-card--product {
