@@ -10,7 +10,7 @@
 {
   "current": {
     "logo": "shopify://shop_images/lumoir-bronze.png",
-    "logo_width": 140,
+    "logo_width": 150,
     "favicon": "shopify://shop_images/logo-lumoir-mic_3.png",
     "type_header_font": "noto_serif_japanese_n4",
     "heading_scale": 100,
@@ -126,9 +126,7 @@
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
-        "custom_css": [
-          ".site-header,header,sticky-header {display: none !important;}"
-        ],
+        "custom_css": [],
         "settings": {
           "color_scheme": "scheme-1"
         }
