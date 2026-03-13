@@ -157,9 +157,10 @@
         "image-with-text-0",
         "image-with-text-1"
       ],
+      "custom_css": [],
       "settings": {
-        "image": "shopify://shop_images/products-wide.jpg",
-        "height": "small",
+        "image": "shopify://shop_images/products-wide.png",
+        "height": "adapt",
         "desktop_image_width": "medium",
         "layout": "text_first",
         "image_behavior": "none",
