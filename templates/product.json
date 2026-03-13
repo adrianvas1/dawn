@@ -158,7 +158,7 @@
         "image-with-text-1"
       ],
       "settings": {
-        "image": "shopify://shop_images/candles-minimal-5.jpg",
+        "image": "shopify://shop_images/products-wide.jpg",
         "height": "small",
         "desktop_image_width": "medium",
         "layout": "text_first",
