@@ -11,14 +11,14 @@
 /* Lightbox / image preview size fix */
 .product-media-modal__content,
 .media-modal__content {
-  max-width: 60vw !important;
-  max-height: 70vh !important;
+  max-width: 95vw !important;
+  max-height: 95vh !important;
 }
 
 .product-media-modal__content img,
 .media-modal__content img {
   max-width: 100% !important;
-  max-height: 70vh !important;
+  max-height: 95vh !important;
   object-fit: contain !important;
 }
 
