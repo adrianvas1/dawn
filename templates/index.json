@@ -277,6 +277,10 @@
       "settings": {
         "include_margins": true
       }
+    },
+    "1773771767a4a98bcc": {
+      "type": "_blocks",
+      "settings": {}
     }
   },
   "order": [
@@ -288,6 +292,7 @@
     "multicolumn",
     "video_zp983X",
     "1768083286f75cb8ee",
-    "1768083315563cafb1"
+    "1768083315563cafb1",
+    "1773771767a4a98bcc"
   ]
 }
