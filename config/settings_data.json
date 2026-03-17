@@ -14,7 +14,7 @@
     "favicon": "shopify://shop_images/logo-lumoir-mic_3.png",
     "type_header_font": "noto_serif_japanese_n4",
     "heading_scale": 100,
-    "type_body_font": "noto_serif_japanese_n3",
+    "type_body_font": "serif",
     "body_scale": 100,
     "page_width": 1000,
     "spacing_sections": 0,
