@@ -123,6 +123,7 @@
     "show_vendor": false,
     "show_cart_note": false,
     "cart_drawer_collection": "",
+    "cart_color_scheme": "scheme-2",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
@@ -177,9 +178,9 @@
           "background": "#181007",
           "background_gradient": "",
           "text": "#ffffff",
-          "button": "#c9a961",
+          "button": "#2d2926",
           "button_label": "#181007",
-          "secondary_button_label": "#121212",
+          "secondary_button_label": "#565555",
           "shadow": "#181007"
         }
       },
