@@ -2267,6 +2267,8 @@
   ]
 }
 {% endschema %}
+
+
 <script>
 (function() {
   function getVariantPrefix(productHandle, variantTitle) {
@@ -2301,9 +2303,23 @@
       if (match && !firstVisible) firstVisible = item;
     });
 
-    if (firstVisible) {
+    // Fallback: dacă nicio imagine nu se potrivește, arată toate
+    if (!firstVisible) {
+      mediaItems.forEach(function(item) {
+        item.style.display = '';
+        item.style.visibility = '';
+        item.style.position = '';
+        item.style.pointerEvents = '';
+        item.setAttribute('aria-hidden', 'false');
+      });
+      thumbnails.forEach(function(t) { t.style.display = ''; });
+    } else {
       firstVisible.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
+
+    // Arată galeria după filtrare
+    const gallery = document.querySelector('.product__media-wrapper, .product-media-container');
+    if (gallery) gallery.style.opacity = '1';
   }
 
   function getProductHandle() {
@@ -2314,44 +2330,74 @@
     const productHandle = getProductHandle();
     if (!productHandle || !variantId) return;
 
-    // Găsim titlul variantei din JSON-ul produsului
-    const productJSON = document.querySelector('[data-product-json], #ProductJson-product-template, script[type="application/json"][data-product-json]');
-    if (productJSON) {
-      try {
-        const product = JSON.parse(productJSON.textContent);
-        const variant = product.variants.find(v => v.id == variantId);
-        if (variant) {
-          const prefix = getVariantPrefix(productHandle, variant.title);
-          console.log('[LumoirGallery] Variant:', variant.title, '| Prefix:', prefix);
-          filterGallery(prefix);
-          return;
-        }
-      } catch(e) {}
-    }
-
-    // Fallback: fetch variant din API
     fetch('/variants/' + variantId + '.js')
       .then(r => r.json())
       .then(function(variant) {
         const prefix = getVariantPrefix(productHandle, variant.title);
-        console.log('[LumoirGallery] Variant (API):', variant.title, '| Prefix:', prefix);
+        console.log('[LumoirGallery] Variant:', variant.title, '| Prefix:', prefix);
+        filterGallery(prefix);
+      });
+  }
+
+  function getDefaultVariantId() {
+    // Caută toate variantele din pagină
+    const inputs = document.querySelectorAll('.product-form__input input[type="radio"]');
+    let theSetId = null;
+    let grandeId = null;
+
+    inputs.forEach(function(input) {
+      const label = input.value;
+      // Verificăm prin fetch toate variantele
+    });
+
+    // Fallback: ia primul input[name="id"]
+    const hiddenInput = document.querySelector('input[name="id"]');
+    return hiddenInput ? hiddenInput.value : null;
+  }
+
+  function setDefaultVariant() {
+    const productHandle = getProductHandle();
+    if (!productHandle) return;
+
+    // Ascunde galeria până se filtrează
+    const gallery = document.querySelector('.product__media-wrapper, .product-media-container');
+    if (gallery) gallery.style.opacity = '0';
+
+    // Fetch toate variantele produsului
+    fetch(window.location.pathname + '.js')
+      .then(r => r.json())
+      .then(function(product) {
+        const variants = product.variants;
+        
+        // Caută "The Set" apoi "Grande" ca default
+        const theSet = variants.find(v => v.title.toLowerCase().includes('the set'));
+        const grande = variants.find(v => v.title.toLowerCase().includes('grande'));
+        const defaultVariant = theSet || grande || variants[0];
+
+        console.log('[LumoirGallery] Default variant:', defaultVariant.title);
+
+        // Selectează varianta în UI
+        const input = document.querySelector('input[name="id"][value="' + defaultVariant.id + '"]');
+        if (input) {
+          input.checked = true;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        // Filtrează galeria
+        const prefix = getVariantPrefix(productHandle, defaultVariant.title);
         filterGallery(prefix);
       });
   }
 
   function init() {
-    // Ascultă change pe input[name="id"] — cum face Dawn
     document.addEventListener('change', function(e) {
       if (e.target && e.target.name === 'id') {
         handleVariantChange(e.target.value);
       }
     });
 
-    // Aplică la încărcare
-    setTimeout(function() {
-      const input = document.querySelector('input[name="id"], select[name="id"]');
-      if (input) handleVariantChange(input.value);
-    }, 300);
+    // Aplică default la încărcare
+    setDefaultVariant();
   }
 
   if (document.readyState === 'loading') {
@@ -2361,4 +2407,3 @@
   }
 })();
 </script>
-
