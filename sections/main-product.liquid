@@ -2314,7 +2314,14 @@
     setTimeout(function() {
       const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"]) button, .thumbnail-list__item:not([style*="display: none"]) a');
       if (firstThumb) firstThumb.click();
-    }, 50);
+
+      // Actualizează counter-ul Dawn pe mobil
+      const visibleItems = document.querySelectorAll('.product__media-item:not([style*="display: none"])');
+      const total = document.querySelector('.slider-counter--total');
+      const current = document.querySelector('.slider-counter--current');
+      if (total) total.textContent = visibleItems.length;
+      if (current) current.textContent = '1';
+    }, 100);
   }
 
   function getProductHandle() {
