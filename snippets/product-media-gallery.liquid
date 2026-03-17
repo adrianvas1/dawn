@@ -334,10 +334,12 @@
 <script>
 (function() {
   function getVariantPrefix(variantTitle) {
-    // Ia ultimul option (size) din titlul variantei
+    // variantTitle ex: "Natural / Vanilla and hot milk / Petite"
     const parts = variantTitle.split(' / ');
-    const size = parts[parts.length - 1];
-    return size.toLowerCase().replace(/\s+/g, '-');
+    // Luăm prima opțiune (culoare) și ultima (size)
+    const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+    const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
+    return color + '-' + size;
   }
 
   function filterGallery(prefix) {
@@ -367,7 +369,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    // Ascultă schimbarea variantei
     document.addEventListener('variant:change', function(e) {
       if (e.detail && e.detail.variant) {
         const prefix = getVariantPrefix(e.detail.variant.title);
@@ -375,17 +376,13 @@
       }
     });
 
-    // Aplică la încărcare pentru varianta selectată default
-    const selectedOption = document.querySelector('.product-form__input input:checked');
-    if (selectedOption) {
-      // Trigger pe varianta curentă
-      const variantSelect = document.querySelector('[name="id"]');
-      if (variantSelect) {
-        const event = new Event('change', { bubbles: true });
-        variantSelect.dispatchEvent(event);
-      }
+    // Aplică la încărcare
+    const variantSelect = document.querySelector('[name="id"]');
+    if (variantSelect) {
+      variantSelect.dispatchEvent(new Event('change', { bubbles: true }));
     }
   });
 })();
 </script>
+
 
