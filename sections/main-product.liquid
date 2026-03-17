@@ -2385,10 +2385,14 @@
     updateDots(visibleCount, 0);
 
     setTimeout(function() {
-      const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"]) button, .thumbnail-list__item:not([style*="display: none"]) a');
-      if (firstThumb) firstThumb.click();
       const slider = document.querySelector('.product__media-list');
       if (slider) slider.scrollTo({ left: 0, behavior: 'instant' });
+
+      // Desktop: scroll thumbnail list la primul vizibil
+      const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"])');
+      if (firstThumb) {
+        firstThumb.scrollIntoView({ behavior: 'instant', block: 'nearest' });
+      }
     }, 50);
   }
 
