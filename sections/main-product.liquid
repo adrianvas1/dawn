@@ -2268,6 +2268,83 @@
 }
 {% endschema %}
 
-<script>console.log('lumoir test');</script>
+<script>
+(function() {
+  function getVariantPrefix(productHandle, variantTitle) {
+    const parts = variantTitle.split(' / ');
+    const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+    const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
+    return productHandle + '-' + color + '-' + size;
+  }
 
+  function filterGallery(prefix) {
+    const mediaItems = document.querySelectorAll('.product__media-item');
+    const thumbnails = document.querySelectorAll('.thumbnail-list__item');
+    let firstVisible = null;
+
+    mediaItems.forEach(function(item, index) {
+      const img = item.querySelector('img');
+      if (!img) return;
+      const src = img.src || img.dataset.src || '';
+      const filename = src.split('/').pop().split('?')[0].toLowerCase();
+      const match = filename.startsWith(prefix + '-');
+
+      item.style.display = match ? '' : 'none';
+      item.style.visibility = match ? '' : 'hidden';
+      item.style.position = match ? '' : 'absolute';
+      item.style.pointerEvents = match ? '' : 'none';
+      item.setAttribute('aria-hidden', match ? 'false' : 'true');
+
+      if (thumbnails[index]) {
+        thumbnails[index].style.display = match ? '' : 'none';
+      }
+
+      if (match && !firstVisible) firstVisible = item;
+    });
+
+    if (firstVisible) {
+      firstVisible.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function getProductHandle() {
+    return document.querySelector('[data-product-handle]')?.dataset.productHandle
+      || window.location.pathname.split('/products/')[1]?.split('?')[0];
+  }
+
+  function init() {
+    const productHandle = getProductHandle();
+    if (!productHandle) return;
+
+    document.addEventListener('variant:change', function(e) {
+      if (e.detail?.variant) {
+        filterGallery(getVariantPrefix(productHandle, e.detail.variant.title));
+      }
+    });
+
+    const variantSelect = document.querySelector('select[name="id"], input[name="id"]');
+    if (variantSelect) {
+      variantSelect.addEventListener('change', function() {
+        const selectedOption = this.options?.[this.selectedIndex];
+        if (selectedOption) {
+          filterGallery(getVariantPrefix(productHandle, selectedOption.text));
+        }
+      });
+    }
+
+    setTimeout(function() {
+      const variantSelect = document.querySelector('[name="id"]');
+      if (variantSelect) {
+        variantSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 
