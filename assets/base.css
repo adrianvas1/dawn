@@ -24,13 +24,10 @@
 }
 
 /* Fix culoare "Continuați cumpărăturile" */
-.cart-notification__links a:not(.button),
-.cart-notification [href*="collections"],
-.cart-notification__continue-shopping {
+.cart-notification .button-label {
   color: #7c6a52 !important;
   text-decoration-color: #7c6a52 !important;
 }
-
 
 /* Lightbox / image preview size fix */
 .product-media-modal__content,
