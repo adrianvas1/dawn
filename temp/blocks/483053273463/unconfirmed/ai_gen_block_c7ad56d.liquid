@@ -1,6 +1,376 @@
+{% doc %}
+  @prompt
+    Create a product image lightbox/popup that shows only the currently selected product image when clicked. When a user clicks on the main product image, a modal/overlay should appear showing only that specific image in a larger size. The modal should close when clicking outside it or on an X button. It should NOT show a gallery or allow scrolling through other images — only the single clicked image. Should work with the existing product image gallery and be styled to match a dark, premium aesthetic.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-lightbox-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+  }
+
+  .ai-product-lightbox-trigger-{{ ai_gen_id }} {
+    cursor: zoom-in;
+    display: block;
+    width: 100%;
+    position: relative;
+  }
+
+  .ai-product-lightbox-trigger-{{ ai_gen_id }} img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-product-lightbox-overlay-{{ ai_gen_id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: 0;
+    visibility: hidden;
+    z-index: 9998;
+    transition: opacity {{ block.settings.animation_speed }}ms ease, visibility {{ block.settings.animation_speed }}ms ease;
+  }
+
+  .ai-product-lightbox-overlay-{{ ai_gen_id }}.active {
+    opacity: {{ block.settings.overlay_opacity }};
+    visibility: visible;
+  }
+
+  .ai-product-lightbox-modal-{{ ai_gen_id }} {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    max-width: {{ block.settings.modal_max_width }}%;
+    max-height: {{ block.settings.modal_max_height }}%;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity {{ block.settings.animation_speed }}ms ease, visibility {{ block.settings.animation_speed }}ms ease, transform {{ block.settings.animation_speed }}ms ease;
+    padding: 20px;
+  }
+
+  .ai-product-lightbox-modal-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .ai-product-lightbox-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-product-lightbox-image-{{ ai_gen_id }} {
+    max-width: 100%;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .ai-product-lightbox-close-{{ ai_gen_id }} {
+    position: fixed;
+    top: {{ block.settings.close_button_position }}px;
+    right: {{ block.settings.close_button_position }}px;
+    width: {{ block.settings.close_button_size }}px;
+    height: {{ block.settings.close_button_size }}px;
+    background-color: {{ block.settings.close_button_bg }};
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity {{ block.settings.animation_speed }}ms ease, visibility {{ block.settings.animation_speed }}ms ease, background-color 0.2s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .ai-product-lightbox-close-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ai-product-lightbox-close-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.close_button_hover_bg }};
+  }
+
+  .ai-product-lightbox-close-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.close_button_size }}px * 0.5);
+    height: calc({{ block.settings.close_button_size }}px * 0.5);
+    stroke: {{ block.settings.close_button_icon_color }};
+  }
+
+  body.ai-lightbox-open-{{ ai_gen_id }} {
+    overflow: hidden;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-product-lightbox-modal-{{ ai_gen_id }} {
+      max-width: 95%;
+      max-height: 85%;
+      padding: 10px;
+    }
+
+    .ai-product-lightbox-close-{{ ai_gen_id }} {
+      top: 10px;
+      right: 10px;
+    }
+  }
+{% endstyle %}
+
+<product-image-lightbox-{{ ai_gen_id }}
+  class="ai-product-lightbox-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.product_image %}
+    <button
+      class="ai-product-lightbox-trigger-{{ ai_gen_id }}"
+      aria-label="View larger image"
+      type="button"
+    >
+      <img
+        src="{{ block.settings.product_image | image_url: width: 1000 }}"
+        alt="{{ block.settings.product_image.alt | escape }}"
+        loading="lazy"
+        width="{{ block.settings.product_image.width }}"
+        height="{{ block.settings.product_image.height }}"
+      >
+    </button>
+  {% else %}
+    <div class="ai-product-lightbox-placeholder-{{ ai_gen_id }}">
+      {{ 'product-1' | placeholder_svg_tag }}
+    </div>
+  {% endif %}
+
+  <div class="ai-product-lightbox-overlay-{{ ai_gen_id }}"></div>
+
+  <div class="ai-product-lightbox-modal-{{ ai_gen_id }}">
+    <div class="ai-product-lightbox-image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.product_image %}
+        <img
+          src="{{ block.settings.product_image | image_url: width: 2000 }}"
+          alt="{{ block.settings.product_image.alt | escape }}"
+          class="ai-product-lightbox-image-{{ ai_gen_id }}"
+          loading="lazy"
+        >
+      {% endif %}
+    </div>
+  </div>
+
+  <button
+    class="ai-product-lightbox-close-{{ ai_gen_id }}"
+    aria-label="Close lightbox"
+    type="button"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+</product-image-lightbox-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductImageLightbox{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.trigger = this.querySelector('.ai-product-lightbox-trigger-{{ ai_gen_id }}');
+        this.overlay = this.querySelector('.ai-product-lightbox-overlay-{{ ai_gen_id }}');
+        this.modal = this.querySelector('.ai-product-lightbox-modal-{{ ai_gen_id }}');
+        this.closeButton = this.querySelector('.ai-product-lightbox-close-{{ ai_gen_id }}');
+
+        if (!this.trigger) return;
+
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.trigger.addEventListener('click', () => this.openLightbox());
+        this.closeButton.addEventListener('click', () => this.closeLightbox());
+        this.overlay.addEventListener('click', () => this.closeLightbox());
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.modal.classList.contains('active')) {
+            this.closeLightbox();
+          }
+        });
+      }
+
+      openLightbox() {
+        this.overlay.classList.add('active');
+        this.modal.classList.add('active');
+        this.closeButton.classList.add('active');
+        document.body.classList.add('ai-lightbox-open-{{ ai_gen_id }}');
+      }
+
+      closeLightbox() {
+        this.overlay.classList.remove('active');
+        this.modal.classList.remove('active');
+        this.closeButton.classList.remove('active');
+        document.body.classList.remove('ai-lightbox-open-{{ ai_gen_id }}');
+      }
+    }
+
+    customElements.define('product-image-lightbox-{{ ai_gen_id }}', ProductImageLightbox{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Product image lightbox",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Lightbox style"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.9
+    },
+    {
+      "type": "range",
+      "id": "modal_max_width",
+      "label": "Modal max width",
+      "min": 50,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "modal_max_height",
+      "label": "Modal max height",
+      "min": 50,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "label": "Animation speed",
+      "min": 100,
+      "max": 500,
+      "step": 50,
+      "unit": "ms",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Close button"
+    },
+    {
+      "type": "range",
+      "id": "close_button_size",
+      "label": "Button size",
+      "min": 30,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "close_button_position",
+      "label": "Button position",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "close_button_bg",
+      "label": "Background color",
+      "default": "#2d2926"
+    },
+    {
+      "type": "color",
+      "id": "close_button_hover_bg",
+      "label": "Hover background color",
+      "default": "#594733"
+    },
+    {
+      "type": "color",
+      "id": "close_button_icon_color",
+      "label": "Icon color",
+      "default": "#f7f5f2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product image lightbox"
+    }
+  ]
+}
 {% endschema %}
