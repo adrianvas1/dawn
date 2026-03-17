@@ -2300,81 +2300,142 @@
 
 <script>
 (function() {
-  let productData = null;
-
-  // Cache pentru elemente DOM
-  const selectors = {
-    mediaItems: () => document.querySelectorAll('.product__media-item'),
-    thumbnails: () => document.querySelectorAll('.thumbnail-list__item'),
-    slider: () => document.querySelector('.product__media-list')
-  };
-
   function getVariantPrefix(productHandle, variantTitle) {
     const parts = variantTitle.split(' / ');
-    const color = parts[0].toLowerCase().trim().replace(/\s+/g, '-');
-    const size = parts[parts.length - 1].toLowerCase().trim().replace(/\s+/g, '-');
-    return `${productHandle}-${color}-${size}`;
+    const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+    const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
+    return productHandle + '-' + color + '-' + size;
   }
 
   function filterGallery(prefix, fallbackPrefix) {
-    const mediaItems = selectors.mediaItems();
-    const thumbnails = selectors.thumbnails();
+    const mediaItems = document.querySelectorAll('.product__media-item');
+    const thumbnails = document.querySelectorAll('.thumbnail-list__item');
     let firstVisible = null;
+    let visibleCount = 0;
 
-    mediaItems.forEach((item, index) => {
+    // Încearcă prefix-ul principal
+    let matchedItems = [];
+    mediaItems.forEach(function(item) {
       const img = item.querySelector('img');
       if (!img) return;
-      
-      const src = img.getAttribute('src') || img.getAttribute('data-src') || '';
+      const src = img.src || img.dataset.src || '';
       const filename = src.split('/').pop().split('?')[0].toLowerCase();
-      
-      const isMatch = filename.startsWith(prefix + '-') || (fallbackPrefix && filename.startsWith(fallbackPrefix + '-'));
-
-      item.style.display = isMatch ? '' : 'none';
-      if (thumbnails[index]) thumbnails[index].style.display = isMatch ? '' : 'none';
-      if (isMatch && !firstVisible) firstVisible = item;
+      if (filename.startsWith(prefix + '-')) matchedItems.push(item);
     });
 
-    // Reset slider la prima imagine vizibilă instant
-    if (firstVisible) {
-      const slider = selectors.slider();
-      if (slider) slider.scrollTo({ left: 0 });
+    // Dacă nu găsește nimic, folosește fallback (the-set)
+    const activePrefix = matchedItems.length > 0 ? prefix : (fallbackPrefix || prefix);
+    console.log('[LumoirGallery] Using prefix:', activePrefix, '| matches:', matchedItems.length);
+
+    mediaItems.forEach(function(item, index) {
+      const img = item.querySelector('img');
+      if (!img) return;
+      const src = img.src || img.dataset.src || '';
+      const filename = src.split('/').pop().split('?')[0].toLowerCase();
+      const match = filename.startsWith(activePrefix + '-');
+
+      item.style.display = match ? '' : 'none';
+      item.style.visibility = '';
+      item.style.position = '';
+      item.style.pointerEvents = '';
+
+      if (thumbnails[index]) {
+        thumbnails[index].style.display = match ? '' : 'none';
+      }
+
+      if (match) {
+        visibleCount++;
+        if (!firstVisible) firstVisible = item;
+      }
+    });
+
+    if (!firstVisible) {
+      mediaItems.forEach(function(item) { item.style.display = ''; });
+      thumbnails.forEach(function(t) { t.style.display = ''; });
+      visibleCount = mediaItems.length;
     }
+
+    setTimeout(function() {
+      const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"]) button, .thumbnail-list__item:not([style*="display: none"]) a');
+      if (firstThumb) firstThumb.click();
+      const slider = document.querySelector('.product__media-list');
+      if (slider) slider.scrollTo({ left: 0, behavior: 'instant' });
+    }, 50);
+  }
+
+  function getProductHandle() {
+    return window.location.pathname.split('/products/')[1]?.split('?')[0];
   }
 
   function handleVariantChange(variantId) {
-    if (!productData) return;
-    
-    const variant = productData.variants.find(v => v.id == variantId);
-    if (!variant) return;
+    const productHandle = getProductHandle();
+    if (!productHandle || !variantId) return;
 
-    const productHandle = window.location.pathname.split('/products/')[1]?.split('?')[0];
-    const prefix = getVariantPrefix(productHandle, variant.title);
-    const color = variant.title.split(' / ')[0].toLowerCase().replace(/\s+/g, '-');
-    const fallbackPrefix = `${productHandle}-${color}-the-set`;
-
-    filterGallery(prefix, fallbackPrefix);
+    fetch('/variants/' + variantId + '.js')
+      .then(r => r.json())
+      .then(function(variant) {
+        const prefix = getVariantPrefix(productHandle, variant.title);
+        const parts = variant.title.split(' / ');
+        const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+        const fallbackPrefix = productHandle + '-' + color + '-the-set';
+        console.log('[LumoirGallery] Variant:', variant.title, '| Prefix:', prefix, '| Fallback:', fallbackPrefix);
+        filterGallery(prefix, fallbackPrefix);
+      });
   }
 
-  async function init() {
-    // Luăm datele produsului dintr-un script tag existent pe pagină (specific Dawn) sau fetch o singură dată
-    try {
-      const response = await fetch(window.location.pathname + '.js');
-      productData = await response.json();
-      
-      // Aplică filtrul pentru varianta selectată default la load
-      const urlParams = new URLSearchParams(window.location.search);
-      const currentVariantId = urlParams.get('variant') || productData.variants[0].id;
-      handleVariantChange(currentVariantId);
+  function setDefaultVariant() {
+    const productHandle = getProductHandle();
+    if (!productHandle) return;
 
-    } catch (e) {
-      console.error('[Lumoir] Error loading product data:', e);
-    }
+    fetch(window.location.pathname + '.js')
+      .then(r => r.json())
+      .then(function(product) {
+        const variants = product.variants;
+        const theSet = variants.find(v => v.title.toLowerCase().includes('the set'));
+        const grande = variants.find(v => v.title.toLowerCase().includes('grande'));
+        const defaultVariant = theSet || grande || variants[0];
 
-    // Listener pe schimbarea de input (radio/select)
-    document.addEventListener('change', (e) => {
-      if (e.target.name === 'id') handleVariantChange(e.target.value);
+        const input = document.querySelector('input[name="id"][value="' + defaultVariant.id + '"]');
+        if (input) {
+          input.checked = true;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        const prefix = getVariantPrefix(productHandle, defaultVariant.title);
+        const parts = defaultVariant.title.split(' / ');
+        const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+        const fallbackPrefix = productHandle + '-' + color + '-the-set';
+        filterGallery(prefix, fallbackPrefix);
+      });
+  }
+
+  function initScrollListener() {
+    const slider = document.querySelector('.product__media-list');
+    if (!slider) return;
+
+    slider.addEventListener('scroll', function() {
+      const visibleItems = Array.from(document.querySelectorAll('.product__media-item:not([style*="display: none"])'));
+      const sliderLeft = slider.scrollLeft;
+      const itemWidth = visibleItems[0]?.offsetWidth || 1;
+      const activeIndex = Math.round(sliderLeft / itemWidth);
+
+      document.querySelectorAll('.lumoir-dots .dot').forEach(function(d, i) {
+        d.classList.toggle('active', i === activeIndex);
+      });
     });
+  }
+
+  function init() {
+    document.addEventListener('change', function(e) {
+      if (e.target && e.target.name === 'id') {
+        handleVariantChange(e.target.value);
+      }
+    });
+
+    setTimeout(function() {
+      setDefaultVariant();
+      initScrollListener();
+    }, 300);
   }
 
   if (document.readyState === 'loading') {
