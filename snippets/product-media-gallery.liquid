@@ -333,13 +333,13 @@
 
 <script>
 (function() {
-  function getVariantPrefix(variantTitle) {
-    // variantTitle ex: "Natural / Vanilla and hot milk / Petite"
+  function getVariantPrefix(productHandle, variantTitle) {
+    // variantTitle ex: "Natural / Vanilla and hot milk / Midi"
     const parts = variantTitle.split(' / ');
-    // Luăm prima opțiune (culoare) și ultima (size)
     const color = parts[0].toLowerCase().replace(/\s+/g, '-');
     const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
-    return color + '-' + size;
+    return productHandle + '-' + color + '-' + size;
+    // rezultat: "swirling-aura-natural-midi"
   }
 
   function filterGallery(prefix) {
@@ -352,7 +352,7 @@
       const src = img.src || img.dataset.src || '';
       const filename = src.split('/').pop().split('?')[0].toLowerCase();
 
-      if (filename.startsWith(prefix + '-') || filename.startsWith(prefix + '_')) {
+      if (filename.startsWith(prefix + '-')) {
         item.style.display = '';
         anyVisible = true;
       } else {
@@ -369,9 +369,12 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
+    const productHandle = document.querySelector('[data-product-handle]')?.dataset.productHandle
+      || window.location.pathname.split('/products/')[1]?.split('?')[0];
+
     document.addEventListener('variant:change', function(e) {
-      if (e.detail && e.detail.variant) {
-        const prefix = getVariantPrefix(e.detail.variant.title);
+      if (e.detail && e.detail.variant && productHandle) {
+        const prefix = getVariantPrefix(productHandle, e.detail.variant.title);
         filterGallery(prefix);
       }
     });
