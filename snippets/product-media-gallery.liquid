@@ -334,12 +334,11 @@
 <script>
 (function() {
   function getVariantPrefix(productHandle, variantTitle) {
-    // variantTitle ex: "Natural / Vanilla and hot milk / Midi"
     const parts = variantTitle.split(' / ');
     const color = parts[0].toLowerCase().replace(/\s+/g, '-');
     const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
     return productHandle + '-' + color + '-' + size;
-    // rezultat: "swirling-aura-natural-midi"
+    // ex: "swirling-aura-natural-grande"
   }
 
   function filterGallery(prefix) {
@@ -360,7 +359,6 @@
       }
     });
 
-    // Fallback: dacă nicio imagine nu se potrivește, arată toate
     if (!anyVisible) {
       mediaItems.forEach(function(item) {
         item.style.display = '';
@@ -379,7 +377,6 @@
       }
     });
 
-    // Aplică la încărcare
     const variantSelect = document.querySelector('[name="id"]');
     if (variantSelect) {
       variantSelect.dispatchEvent(new Event('change', { bubbles: true }));
