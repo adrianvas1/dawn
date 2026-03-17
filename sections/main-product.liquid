@@ -2291,10 +2291,9 @@
       const match = filename.startsWith(prefix + '-');
 
       item.style.display = match ? '' : 'none';
-      item.style.visibility = match ? '' : 'hidden';
-      item.style.position = match ? '' : 'absolute';
-      item.style.pointerEvents = match ? '' : 'none';
-      item.setAttribute('aria-hidden', match ? 'false' : 'true');
+      item.style.visibility = '';
+      item.style.position = '';
+      item.style.pointerEvents = '';
 
       if (thumbnails[index]) {
         thumbnails[index].style.display = match ? '' : 'none';
@@ -2307,19 +2306,15 @@
     if (!firstVisible) {
       mediaItems.forEach(function(item) {
         item.style.display = '';
-        item.style.visibility = '';
-        item.style.position = '';
-        item.style.pointerEvents = '';
-        item.setAttribute('aria-hidden', 'false');
       });
       thumbnails.forEach(function(t) { t.style.display = ''; });
-    } else {
-      firstVisible.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    // Arată galeria după filtrare
-    const gallery = document.querySelector('.product__media-wrapper, .product-media-container');
-    if (gallery) gallery.style.opacity = '1';
+    // Click pe primul thumbnail vizibil pentru a activa imaginea mare
+    setTimeout(function() {
+      const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"]) button, .thumbnail-list__item:not([style*="display: none"]) a');
+      if (firstThumb) firstThumb.click();
+    }, 50);
   }
 
   function getProductHandle() {
@@ -2339,51 +2334,26 @@
       });
   }
 
-  function getDefaultVariantId() {
-    // Caută toate variantele din pagină
-    const inputs = document.querySelectorAll('.product-form__input input[type="radio"]');
-    let theSetId = null;
-    let grandeId = null;
-
-    inputs.forEach(function(input) {
-      const label = input.value;
-      // Verificăm prin fetch toate variantele
-    });
-
-    // Fallback: ia primul input[name="id"]
-    const hiddenInput = document.querySelector('input[name="id"]');
-    return hiddenInput ? hiddenInput.value : null;
-  }
-
   function setDefaultVariant() {
     const productHandle = getProductHandle();
     if (!productHandle) return;
 
-    // Ascunde galeria până se filtrează
-    const gallery = document.querySelector('.product__media-wrapper, .product-media-container');
-    if (gallery) gallery.style.opacity = '0';
-
-    // Fetch toate variantele produsului
     fetch(window.location.pathname + '.js')
       .then(r => r.json())
       .then(function(product) {
         const variants = product.variants;
-        
-        // Caută "The Set" apoi "Grande" ca default
         const theSet = variants.find(v => v.title.toLowerCase().includes('the set'));
         const grande = variants.find(v => v.title.toLowerCase().includes('grande'));
         const defaultVariant = theSet || grande || variants[0];
 
         console.log('[LumoirGallery] Default variant:', defaultVariant.title);
 
-        // Selectează varianta în UI
         const input = document.querySelector('input[name="id"][value="' + defaultVariant.id + '"]');
         if (input) {
           input.checked = true;
           input.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
-        // Filtrează galeria
         const prefix = getVariantPrefix(productHandle, defaultVariant.title);
         filterGallery(prefix);
       });
@@ -2396,8 +2366,7 @@
       }
     });
 
-    // Aplică default la încărcare
-    setDefaultVariant();
+    setTimeout(setDefaultVariant, 300);
   }
 
   if (document.readyState === 'loading') {
