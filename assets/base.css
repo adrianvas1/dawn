@@ -12,15 +12,15 @@
 .cart-notification__links .button--secondary,
 .cart-notification .button--secondary,
 .cart-notification a.button {
-  color: #ffffff !important;
+  color: #1a1a1a !important;
   background-color: transparent !important;
-  border: 2px solid #ffffff !important;
+  border: 2px solid #1a1a1a !important;
 }
 
 .cart-notification__links .button--secondary:hover,
 .cart-notification a.button:hover {
-  background-color: #ffffff !important;
-  color: #000000 !important;
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
 }
 
 /* Lightbox / image preview size fix */
