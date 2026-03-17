@@ -333,12 +333,11 @@
 
 <script>
 (function() {
-  function getVariantPrefix(productHandle, variantTitle) {
+  function getVariantPrefix(variantTitle) {
+    // Ia ultimul option (size) din titlul variantei
     const parts = variantTitle.split(' / ');
-    const color = parts[0].toLowerCase().replace(/\s+/g, '-');
-    const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
-    return productHandle + '-' + color + '-' + size;
-    // ex: "swirling-aura-natural-grande"
+    const size = parts[parts.length - 1];
+    return size.toLowerCase().replace(/\s+/g, '-');
   }
 
   function filterGallery(prefix) {
@@ -351,7 +350,7 @@
       const src = img.src || img.dataset.src || '';
       const filename = src.split('/').pop().split('?')[0].toLowerCase();
 
-      if (filename.startsWith(prefix + '-')) {
+      if (filename.startsWith(prefix + '-') || filename.startsWith(prefix + '_')) {
         item.style.display = '';
         anyVisible = true;
       } else {
@@ -359,6 +358,7 @@
       }
     });
 
+    // Fallback: dacă nicio imagine nu se potrivește, arată toate
     if (!anyVisible) {
       mediaItems.forEach(function(item) {
         item.style.display = '';
@@ -367,19 +367,23 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    const productHandle = document.querySelector('[data-product-handle]')?.dataset.productHandle
-      || window.location.pathname.split('/products/')[1]?.split('?')[0];
-
+    // Ascultă schimbarea variantei
     document.addEventListener('variant:change', function(e) {
-      if (e.detail && e.detail.variant && productHandle) {
-        const prefix = getVariantPrefix(productHandle, e.detail.variant.title);
+      if (e.detail && e.detail.variant) {
+        const prefix = getVariantPrefix(e.detail.variant.title);
         filterGallery(prefix);
       }
     });
 
-    const variantSelect = document.querySelector('[name="id"]');
-    if (variantSelect) {
-      variantSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    // Aplică la încărcare pentru varianta selectată default
+    const selectedOption = document.querySelector('.product-form__input input:checked');
+    if (selectedOption) {
+      // Trigger pe varianta curentă
+      const variantSelect = document.querySelector('[name="id"]');
+      if (variantSelect) {
+        const event = new Event('change', { bubbles: true });
+        variantSelect.dispatchEvent(event);
+      }
     }
   });
 })();
