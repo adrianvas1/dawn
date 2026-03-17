@@ -2267,7 +2267,6 @@
   ]
 }
 {% endschema %}
-
 <script>
 (function() {
   function getVariantPrefix(productHandle, variantTitle) {
@@ -2308,36 +2307,51 @@
   }
 
   function getProductHandle() {
-    return document.querySelector('[data-product-handle]')?.dataset.productHandle
-      || window.location.pathname.split('/products/')[1]?.split('?')[0];
+    return window.location.pathname.split('/products/')[1]?.split('?')[0];
+  }
+
+  function handleVariantChange(variantId) {
+    const productHandle = getProductHandle();
+    if (!productHandle || !variantId) return;
+
+    // Găsim titlul variantei din JSON-ul produsului
+    const productJSON = document.querySelector('[data-product-json], #ProductJson-product-template, script[type="application/json"][data-product-json]');
+    if (productJSON) {
+      try {
+        const product = JSON.parse(productJSON.textContent);
+        const variant = product.variants.find(v => v.id == variantId);
+        if (variant) {
+          const prefix = getVariantPrefix(productHandle, variant.title);
+          console.log('[LumoirGallery] Variant:', variant.title, '| Prefix:', prefix);
+          filterGallery(prefix);
+          return;
+        }
+      } catch(e) {}
+    }
+
+    // Fallback: fetch variant din API
+    fetch('/variants/' + variantId + '.js')
+      .then(r => r.json())
+      .then(function(variant) {
+        const prefix = getVariantPrefix(productHandle, variant.title);
+        console.log('[LumoirGallery] Variant (API):', variant.title, '| Prefix:', prefix);
+        filterGallery(prefix);
+      });
   }
 
   function init() {
-    const productHandle = getProductHandle();
-    if (!productHandle) return;
-
-    document.addEventListener('variant:change', function(e) {
-      if (e.detail?.variant) {
-        filterGallery(getVariantPrefix(productHandle, e.detail.variant.title));
+    // Ascultă change pe input[name="id"] — cum face Dawn
+    document.addEventListener('change', function(e) {
+      if (e.target && e.target.name === 'id') {
+        handleVariantChange(e.target.value);
       }
     });
 
-    const variantSelect = document.querySelector('select[name="id"], input[name="id"]');
-    if (variantSelect) {
-      variantSelect.addEventListener('change', function() {
-        const selectedOption = this.options?.[this.selectedIndex];
-        if (selectedOption) {
-          filterGallery(getVariantPrefix(productHandle, selectedOption.text));
-        }
-      });
-    }
-
+    // Aplică la încărcare
     setTimeout(function() {
-      const variantSelect = document.querySelector('[name="id"]');
-      if (variantSelect) {
-        variantSelect.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    }, 500);
+      const input = document.querySelector('input[name="id"], select[name="id"]');
+      if (input) handleVariantChange(input.value);
+    }, 300);
   }
 
   if (document.readyState === 'loading') {
