@@ -2268,6 +2268,35 @@
 }
 {% endschema %}
 
+<style>
+/* Lumoir Gallery - ascunde counter si sageti pe mobil */
+@media (max-width: 749px) {
+  .slider-counter,
+  .slider-buttons {
+    display: none !important;
+  }
+  .lumoir-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+}
+.lumoir-dots {
+  display: none;
+}
+.lumoir-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.lumoir-dots .dot.active {
+  background: #000;
+}
+</style>
 
 <script>
 (function() {
@@ -2278,17 +2307,59 @@
     return productHandle + '-' + color + '-' + size;
   }
 
-  function filterGallery(prefix) {
+  function updateDots(count, activeIndex) {
+    let dotsContainer = document.querySelector('.lumoir-dots');
+    if (!dotsContainer) {
+      dotsContainer = document.createElement('div');
+      dotsContainer.className = 'lumoir-dots';
+      const mediaWrapper = document.querySelector('.product__media-wrapper');
+      if (mediaWrapper) mediaWrapper.appendChild(dotsContainer);
+    }
+
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === activeIndex ? ' active' : '');
+      const index = i;
+      dot.addEventListener('click', function() {
+        const visibleItems = document.querySelectorAll('.product__media-item:not([style*="display: none"])');
+        if (visibleItems[index]) {
+          visibleItems[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+          document.querySelectorAll('.lumoir-dots .dot').forEach(function(d, di) {
+            d.classList.toggle('active', di === index);
+          });
+        }
+      });
+      dotsContainer.appendChild(dot);
+    }
+  }
+
+  function filterGallery(prefix, fallbackPrefix) {
     const mediaItems = document.querySelectorAll('.product__media-item');
     const thumbnails = document.querySelectorAll('.thumbnail-list__item');
     let firstVisible = null;
+    let visibleCount = 0;
+
+    // Încearcă prefix-ul principal
+    let matchedItems = [];
+    mediaItems.forEach(function(item) {
+      const img = item.querySelector('img');
+      if (!img) return;
+      const src = img.src || img.dataset.src || '';
+      const filename = src.split('/').pop().split('?')[0].toLowerCase();
+      if (filename.startsWith(prefix + '-')) matchedItems.push(item);
+    });
+
+    // Dacă nu găsește nimic, folosește fallback (the-set)
+    const activePrefix = matchedItems.length > 0 ? prefix : (fallbackPrefix || prefix);
+    console.log('[LumoirGallery] Using prefix:', activePrefix, '| matches:', matchedItems.length);
 
     mediaItems.forEach(function(item, index) {
       const img = item.querySelector('img');
       if (!img) return;
       const src = img.src || img.dataset.src || '';
       const filename = src.split('/').pop().split('?')[0].toLowerCase();
-      const match = filename.startsWith(prefix + '-');
+      const match = filename.startsWith(activePrefix + '-');
 
       item.style.display = match ? '' : 'none';
       item.style.visibility = '';
@@ -2299,29 +2370,26 @@
         thumbnails[index].style.display = match ? '' : 'none';
       }
 
-      if (match && !firstVisible) firstVisible = item;
+      if (match) {
+        visibleCount++;
+        if (!firstVisible) firstVisible = item;
+      }
     });
 
-    // Fallback: dacă nicio imagine nu se potrivește, arată toate
     if (!firstVisible) {
-      mediaItems.forEach(function(item) {
-        item.style.display = '';
-      });
+      mediaItems.forEach(function(item) { item.style.display = ''; });
       thumbnails.forEach(function(t) { t.style.display = ''; });
+      visibleCount = mediaItems.length;
     }
 
-    // Click pe primul thumbnail vizibil pentru a activa imaginea mare
+    updateDots(visibleCount, 0);
+
     setTimeout(function() {
       const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"]) button, .thumbnail-list__item:not([style*="display: none"]) a');
       if (firstThumb) firstThumb.click();
-
-      // Actualizează counter-ul Dawn pe mobil
-      const visibleItems = document.querySelectorAll('.product__media-item:not([style*="display: none"])');
-      const total = document.querySelector('.slider-counter--total');
-      const current = document.querySelector('.slider-counter--current');
-      if (total) total.textContent = visibleItems.length;
-      if (current) current.textContent = '1';
-    }, 100);
+      const slider = document.querySelector('.product__media-list');
+      if (slider) slider.scrollTo({ left: 0, behavior: 'instant' });
+    }, 50);
   }
 
   function getProductHandle() {
@@ -2336,8 +2404,11 @@
       .then(r => r.json())
       .then(function(variant) {
         const prefix = getVariantPrefix(productHandle, variant.title);
-        console.log('[LumoirGallery] Variant:', variant.title, '| Prefix:', prefix);
-        filterGallery(prefix);
+        const parts = variant.title.split(' / ');
+        const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+        const fallbackPrefix = productHandle + '-' + color + '-the-set';
+        console.log('[LumoirGallery] Variant:', variant.title, '| Prefix:', prefix, '| Fallback:', fallbackPrefix);
+        filterGallery(prefix, fallbackPrefix);
       });
   }
 
@@ -2353,8 +2424,6 @@
         const grande = variants.find(v => v.title.toLowerCase().includes('grande'));
         const defaultVariant = theSet || grande || variants[0];
 
-        console.log('[LumoirGallery] Default variant:', defaultVariant.title);
-
         const input = document.querySelector('input[name="id"][value="' + defaultVariant.id + '"]');
         if (input) {
           input.checked = true;
@@ -2362,8 +2431,27 @@
         }
 
         const prefix = getVariantPrefix(productHandle, defaultVariant.title);
-        filterGallery(prefix);
+        const parts = defaultVariant.title.split(' / ');
+        const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+        const fallbackPrefix = productHandle + '-' + color + '-the-set';
+        filterGallery(prefix, fallbackPrefix);
       });
+  }
+
+  function initScrollListener() {
+    const slider = document.querySelector('.product__media-list');
+    if (!slider) return;
+
+    slider.addEventListener('scroll', function() {
+      const visibleItems = Array.from(document.querySelectorAll('.product__media-item:not([style*="display: none"])'));
+      const sliderLeft = slider.scrollLeft;
+      const itemWidth = visibleItems[0]?.offsetWidth || 1;
+      const activeIndex = Math.round(sliderLeft / itemWidth);
+
+      document.querySelectorAll('.lumoir-dots .dot').forEach(function(d, i) {
+        d.classList.toggle('active', i === activeIndex);
+      });
+    });
   }
 
   function init() {
@@ -2373,7 +2461,10 @@
       }
     });
 
-    setTimeout(setDefaultVariant, 300);
+    setTimeout(function() {
+      setDefaultVariant();
+      initScrollListener();
+    }, 300);
   }
 
   if (document.readyState === 'loading') {
@@ -2383,3 +2474,4 @@
   }
 })();
 </script>
+
