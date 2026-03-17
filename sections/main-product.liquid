@@ -2384,27 +2384,12 @@
 
     updateDots(visibleCount, 0);
 
-        setTimeout(function() {
+    setTimeout(function() {
+      const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"]) button, .thumbnail-list__item:not([style*="display: none"]) a');
+      if (firstThumb) firstThumb.click();
       const slider = document.querySelector('.product__media-list');
       if (slider) slider.scrollTo({ left: 0, behavior: 'instant' });
-
-      // Reset thumbnail scroll
-      const thumbnailList = document.querySelector('.thumbnail-list');
-      if (thumbnailList) thumbnailList.scrollTo({ left: 0, behavior: 'instant' });
-
-      // Click pe primul thumbnail vizibil pentru a activa imaginea mare
-      const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"]) button, .thumbnail-list__item:not([style*="display: none"]) a');
-      if (firstThumb) {
-        // Ascunde temporar tranzitia
-        const mediaWrapper = document.querySelector('.product__media-wrapper');
-        if (mediaWrapper) mediaWrapper.style.transition = 'none';
-        firstThumb.click();
-        setTimeout(function() {
-          if (mediaWrapper) mediaWrapper.style.transition = '';
-        }, 100);
-      }
     }, 50);
-
   }
 
   function getProductHandle() {
