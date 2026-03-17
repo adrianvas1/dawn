@@ -8,6 +8,21 @@
   --focused-base-box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0.5rem 0.4rem rgba(var(--color-foreground), 0.3);
 }
 
+/* Fix buton "Vezi coșul" din popup-ul de coș */
+.cart-notification__links .button--secondary,
+.cart-notification .button--secondary,
+.cart-notification a.button {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  border: 2px solid #ffffff !important;
+}
+
+.cart-notification__links .button--secondary:hover,
+.cart-notification a.button:hover {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
 /* Lightbox / image preview size fix */
 .product-media-modal__content,
 .media-modal__content {
