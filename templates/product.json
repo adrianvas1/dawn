@@ -65,21 +65,12 @@
             "page": "materiale-calitate"
           }
         },
-        "collapsible-row-1": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Livrare și retur",
-            "icon": "truck",
-            "content": "",
-            "page": "livrare-retur"
-          }
-        },
         "collapsible-row-2": {
           "type": "collapsible_tab",
           "settings": {
             "heading": "Dimensiuni",
             "icon": "ruler",
-            "content": "{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'lungime' }}{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'latime' }}{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'inaltime' }}",
+            "content": "{{ product.metafields.custom.dimensiuni | metafield_tag }}<p></p>",
             "page": ""
           }
         },
@@ -90,6 +81,15 @@
             "icon": "heart",
             "content": "",
             "page": "ghid-ingrijire"
+          }
+        },
+        "collapsible-row-1": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Livrare și retur",
+            "icon": "truck",
+            "content": "",
+            "page": "livrare-retur"
           }
         },
         "share": {
@@ -113,9 +113,9 @@
         "buy_buttons",
         "description",
         "collapsible-row-0",
-        "collapsible-row-1",
         "collapsible-row-2",
         "collapsible-row-3",
+        "collapsible-row-1",
         "share",
         "judge_me_reviews_preview_badge_jNgP6e"
       ],
