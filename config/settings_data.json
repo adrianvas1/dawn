@@ -12,7 +12,7 @@
     "logo": "shopify://shop_images/lumoir-bronze.png",
     "logo_width": 150,
     "favicon": "shopify://shop_images/logo-lumoir-mic_3.png",
-    "type_header_font": "noto_serif_japanese_n4",
+    "type_header_font": "serif",
     "heading_scale": 100,
     "type_body_font": "serif",
     "body_scale": 100,
