@@ -121,7 +121,7 @@
       ],
       "name": "t:sections.collection-list.presets.name",
       "settings": {
-        "title": "Collections",
+        "title": "Descoperă colecțiile",
         "heading_size": "h1",
         "image_ratio": "square",
         "columns_desktop": 3,
@@ -266,7 +266,7 @@
             "border_color": "#108474",
             "show_drop_shadow": false,
             "transition_speed": 5,
-            "header_text": "Customers are saying",
+            "header_text": "Ce spun clienții noștri",
             "show_average_rating": true
           }
         }
