@@ -45,7 +45,7 @@
         "custom_html_34yHRb": {
           "type": "custom_html",
           "settings": {
-            "custom_html": "<div style=\"display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:20px;\">\n  <a href=\"https://anpc.ro/ce-este-sal/\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <img src=\"https://lumoirstudio.ro/cdn/shop/files/SAL2.png\" alt=\"SAL ANPC\" style=\"height:60px; width:auto;\">\n  </a>\n  <a href=\"https://ec.europa.eu/consumers/odr\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <img src=\"https://lumoirstudio.ro/cdn/shop/files/SOL.png\" alt=\"SOL\" style=\"height:60px; width:auto;\">\n  </a>\n</div>"
+            "custom_html": "<style>\n  .footer-block--anpc-wrapper {\n    grid-column: 1 / -1;\n    display: flex;\n    justify-content: center;\n    gap: 20px;\n    flex-wrap: wrap;\n  }\n</style>\n<div class=\"footer-block--anpc-wrapper\">\n  <a href=\"https://anpc.ro/ce-este-sal/\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <img src=\"https://lumoirstudio.ro/cdn/shop/files/SAL2.png\" alt=\"SAL ANPC\" style=\"height:60px; width:auto;\">\n  </a>\n  <a href=\"https://ec.europa.eu/consumers/odr\" target=\"_blank\" rel=\"noopener noreferrer\">\n    <img src=\"https://lumoirstudio.ro/cdn/shop/files/SOL.png\" alt=\"SOL\" style=\"height:60px; width:auto;\">\n  </a>\n</div>"
           }
         }
       },
