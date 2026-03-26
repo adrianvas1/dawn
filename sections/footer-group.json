@@ -47,7 +47,8 @@
           "settings": {
             "image": "shopify://shop_images/SAL2.png",
             "image_width": 260,
-            "alignment": "center"
+            "alignment": "center",
+            "image_link": "https://anpc.ro/ce-este-sal/"
           }
         },
         "image_Tq6FaY": {
@@ -55,7 +56,8 @@
           "settings": {
             "image": "shopify://shop_images/SOL.png",
             "image_width": 260,
-            "alignment": "center"
+            "alignment": "center",
+            "image_link": "https://ec.europa.eu/consumers/odr"
           }
         }
       },
