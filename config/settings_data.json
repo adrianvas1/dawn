@@ -420,11 +420,7 @@
   },
   "platform_customizations": {
     "custom_css": [
-      "/* Footer wrapper devine flex cu wrap */.footer__content-top .grid {display: flex !important; flex-wrap: wrap !important;}",
-      "/* Blocurile non-ANPC ocupă max 50% */.footer-block:not(.footer-block--anpc) {flex: 0 0 50% !important; max-width: 50% !important;}",
-      "/* Ambele imagini ANPC pe același rând nou, centrate */.footer-block--anpc {flex: 0 0 auto !important; width: auto !important; display: flex !important; justify-content: center !important;}",
-      "/* Primul bloc ANPC împinge tot grupul pe rând nou */.footer-block--anpc:first-of-type {margin-left: auto !important;}",
-      ".footer-block--anpc:last-of-type {margin-right: auto !important;}"
+      ".footer-block--anpc {flex: 0 0 auto !important; width: auto !important;}"
     ]
   }
 }
