@@ -41,13 +41,31 @@
             "heading": "Misiunea noastră",
             "subtext": "<p>Design minimalist, inspirat de armonia formelor sculpturale. Creăm piese premium și eco-friendly care îmbină estetica modernă cu spiritul artizanal, prin detalii care dau personalitate casei tale, adăugând eleganță și căldură.</p>"
           }
+        },
+        "image_xGQrUk": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/SAL2.png",
+            "image_width": 260,
+            "alignment": "center"
+          }
+        },
+        "image_Tq6FaY": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/SOL.png",
+            "image_width": 260,
+            "alignment": "center"
+          }
         }
       },
       "block_order": [
         "link_list_9PWKwx",
         "footer-1",
         "text_AajDbc",
-        "footer-2"
+        "footer-2",
+        "image_xGQrUk",
+        "image_Tq6FaY"
       ],
       "custom_css": [
         ".footer__copyright {opacity: 0.6; letter-spacing: 0.1rem; text-transform: uppercase; font-size: 0.9rem;}"
