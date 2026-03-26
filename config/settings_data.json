@@ -420,7 +420,7 @@
   },
   "platform_customizations": {
     "custom_css": [
-      "#shopify-block-custom_html_34yHRb {grid-column: 1 / -1 !important;}"
+      ".footer__blocks-wrapper .footer-block:last-child {grid-column: 1 / -1; display: flex; justify-content: center;}"
     ]
   }
 }
