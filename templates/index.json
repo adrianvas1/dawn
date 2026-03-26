@@ -265,6 +265,44 @@
     "1773771767a4a98bcc": {
       "type": "_blocks",
       "settings": {}
+    },
+    "17745105039ce1c4d4": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f5cc3bc_zNMczN": {
+          "type": "ai_gen_block_f5cc3bc",
+          "settings": {
+            "sal_title": "Soluționarea Alternativă a Litigiilor",
+            "sal_subtitle": "",
+            "sal_link": "",
+            "sol_title": "Soluționarea Online a Litigiilor",
+            "sol_subtitle": "",
+            "sol_link": "",
+            "logo_size": 60,
+            "button_text": "DETALII",
+            "button_font_size": 14,
+            "button_border_radius": 8,
+            "button_border_thickness": 2,
+            "button_background_color": "#1a3a52",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#1a3a52",
+            "button_hover_background_color": "#0f2a3d",
+            "button_hover_text_color": "#ffffff",
+            "background_color": "#ffffff",
+            "text_color": "#1a3a52",
+            "title_font_size": 16,
+            "subtitle_font_size": 13,
+            "border_radius": 12,
+            "border_thickness": 2,
+            "border_color": "#1a3a52"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f5cc3bc_zNMczN"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -276,6 +314,7 @@
     "multicolumn",
     "1768083286f75cb8ee",
     "1768083315563cafb1",
-    "1773771767a4a98bcc"
+    "1773771767a4a98bcc",
+    "17745105039ce1c4d4"
   ]
 }
