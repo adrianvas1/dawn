@@ -2297,152 +2297,218 @@
   background: #000;
 }
 </style>
-
 <script>
 (function() {
-  function getVariantPrefix(productHandle, variantTitle) {
-    const parts = variantTitle.split(' / ');
-    const color = parts[0].toLowerCase().replace(/\s+/g, '-');
-    const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
-    return productHandle + '-' + color + '-' + size;
-  }
+ // --- DOM cache (populated once) ---
+ let _mediaItems, _thumbnails, _slider;
+ const _variantCache = {};
 
-  function filterGallery(prefix, fallbackPrefix) {
-    const mediaItems = document.querySelectorAll('.product__media-item');
-    const thumbnails = document.querySelectorAll('.thumbnail-list__item');
-    let firstVisible = null;
-    let visibleCount = 0;
 
-    // Încearcă prefix-ul principal
-    let matchedItems = [];
-    mediaItems.forEach(function(item) {
-      const img = item.querySelector('img');
-      if (!img) return;
-      const src = img.src || img.dataset.src || '';
-      const filename = src.split('/').pop().split('?')[0].toLowerCase();
-      if (filename.startsWith(prefix + '-')) matchedItems.push(item);
-    });
+ function getDOM() {
+   if (!_mediaItems) {
+     _mediaItems = document.querySelectorAll('.product__media-item');
+     _thumbnails = document.querySelectorAll('.thumbnail-list__item');
+     _slider = document.querySelector('.product__media-list');
+   }
+ }
 
-    // Dacă nu găsește nimic, folosește fallback (the-set)
-    const activePrefix = matchedItems.length > 0 ? prefix : (fallbackPrefix || prefix);
-    console.log('[LumoirGallery] Using prefix:', activePrefix, '| matches:', matchedItems.length);
 
-    mediaItems.forEach(function(item, index) {
-      const img = item.querySelector('img');
-      if (!img) return;
-      const src = img.src || img.dataset.src || '';
-      const filename = src.split('/').pop().split('?')[0].toLowerCase();
-      const match = filename.startsWith(activePrefix + '-');
+ function getVariantPrefix(productHandle, variantTitle) {
+   const parts = variantTitle.split(' / ');
+   const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+   const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
+   return productHandle + '-' + color + '-' + size;
+ }
 
-      item.style.display = match ? '' : 'none';
-      item.style.visibility = '';
-      item.style.position = '';
-      item.style.pointerEvents = '';
 
-      if (thumbnails[index]) {
-        thumbnails[index].style.display = match ? '' : 'none';
-      }
+ function filterGallery(prefix, fallbackPrefix) {
+   getDOM();
+   const mediaItems = _mediaItems;
+   const thumbnails = _thumbnails;
 
-      if (match) {
-        visibleCount++;
-        if (!firstVisible) firstVisible = item;
-      }
-    });
 
-    if (!firstVisible) {
-      mediaItems.forEach(function(item) { item.style.display = ''; });
-      thumbnails.forEach(function(t) { t.style.display = ''; });
-      visibleCount = mediaItems.length;
-    }
+   // Single pass: collect filenames + determine active prefix
+   let hasMainMatch = false;
+   const len = mediaItems.length;
+   const filenames = new Array(len);
 
-    setTimeout(function() {
-      const firstThumb = document.querySelector('.thumbnail-list__item:not([style*="display: none"]) button, .thumbnail-list__item:not([style*="display: none"]) a');
-      if (firstThumb) firstThumb.click();
-      const slider = document.querySelector('.product__media-list');
-      if (slider) slider.scrollTo({ left: 0, behavior: 'instant' });
-    }, 10);
-  }
 
-  function getProductHandle() {
-    return window.location.pathname.split('/products/')[1]?.split('?')[0];
-  }
+   for (let i = 0; i < len; i++) {
+     const img = mediaItems[i].querySelector('img');
+     if (img) {
+       const src = img.src || img.dataset.src || '';
+       // Extract filename without query string
+       const lastSlash = src.lastIndexOf('/');
+       const qMark = src.indexOf('?', lastSlash);
+       filenames[i] = (qMark > -1 ? src.substring(lastSlash + 1, qMark) : src.substring(lastSlash + 1)).toLowerCase();
+       if (!hasMainMatch && filenames[i].startsWith(prefix + '-')) hasMainMatch = true;
+     } else {
+       filenames[i] = '';
+     }
+   }
 
-  function handleVariantChange(variantId) {
-    const productHandle = getProductHandle();
-    if (!productHandle || !variantId) return;
 
-    fetch('/variants/' + variantId + '.js')
-      .then(r => r.json())
-      .then(function(variant) {
-        const prefix = getVariantPrefix(productHandle, variant.title);
-        const parts = variant.title.split(' / ');
-        const color = parts[0].toLowerCase().replace(/\s+/g, '-');
-        const fallbackPrefix = productHandle + '-' + color + '-the-set';
-        console.log('[LumoirGallery] Variant:', variant.title, '| Prefix:', prefix, '| Fallback:', fallbackPrefix);
-        filterGallery(prefix, fallbackPrefix);
-      });
-  }
+   const activePrefix = hasMainMatch ? prefix : (fallbackPrefix || prefix);
 
-  function setDefaultVariant() {
-    const productHandle = getProductHandle();
-    if (!productHandle) return;
 
-    fetch(window.location.pathname + '.js')
-      .then(r => r.json())
-      .then(function(product) {
-        const variants = product.variants;
-        const theSet = variants.find(v => v.title.toLowerCase().includes('the set'));
-        const grande = variants.find(v => v.title.toLowerCase().includes('grande'));
-        const defaultVariant = theSet || grande || variants[0];
+   // Single pass: apply visibility, batch reads before writes
+   let firstVisibleThumbBtn = null;
+   let visibleCount = 0;
 
-        const input = document.querySelector('input[name="id"][value="' + defaultVariant.id + '"]');
-        if (input) {
-          input.checked = true;
-          input.dispatchEvent(new Event('change', { bubbles: true }));
-        }
 
-        const prefix = getVariantPrefix(productHandle, defaultVariant.title);
-        const parts = defaultVariant.title.split(' / ');
-        const color = parts[0].toLowerCase().replace(/\s+/g, '-');
-        const fallbackPrefix = productHandle + '-' + color + '-the-set';
-        filterGallery(prefix, fallbackPrefix);
-      });
-  }
+   for (let i = 0; i < len; i++) {
+     const match = filenames[i] !== '' && filenames[i].startsWith(activePrefix + '-');
+     const display = match ? '' : 'none';
 
-  function initScrollListener() {
-    const slider = document.querySelector('.product__media-list');
-    if (!slider) return;
 
-    slider.addEventListener('scroll', function() {
-      const visibleItems = Array.from(document.querySelectorAll('.product__media-item:not([style*="display: none"])'));
-      const sliderLeft = slider.scrollLeft;
-      const itemWidth = visibleItems[0]?.offsetWidth || 1;
-      const activeIndex = Math.round(sliderLeft / itemWidth);
+     mediaItems[i].style.display = display;
+     if (thumbnails[i]) thumbnails[i].style.display = display;
 
-      document.querySelectorAll('.lumoir-dots .dot').forEach(function(d, i) {
-        d.classList.toggle('active', i === activeIndex);
-      });
-    });
-  }
 
-  function init() {
-    document.addEventListener('change', function(e) {
-      if (e.target && e.target.name === 'id') {
-        handleVariantChange(e.target.value);
-      }
-    });
+     if (match) {
+       visibleCount++;
+       if (!firstVisibleThumbBtn) {
+         const thumb = thumbnails[i];
+         if (thumb) firstVisibleThumbBtn = thumb.querySelector('button, a');
+       }
+     }
+   }
 
-    setTimeout(function() {
-      setDefaultVariant();
-      initScrollListener();
-    }, 10);
-  }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+   // Fallback: show all if nothing matched
+   if (visibleCount === 0) {
+     for (let i = 0; i < len; i++) {
+       mediaItems[i].style.display = '';
+       if (thumbnails[i]) thumbnails[i].style.display = '';
+     }
+   }
+
+
+   // Use rAF to click thumbnail + reset scroll (avoids layout thrash)
+   requestAnimationFrame(function() {
+     if (firstVisibleThumbBtn) firstVisibleThumbBtn.click();
+     if (_slider) _slider.scrollTo({ left: 0, behavior: 'instant' });
+   });
+ }
+
+
+ function getProductHandle() {
+   return window.location.pathname.split('/products/')[1]?.split('?')[0];
+ }
+
+
+ function handleVariantChange(variantId) {
+   const productHandle = getProductHandle();
+   if (!productHandle || !variantId) return;
+
+
+   // Use cached variant data if available
+   if (_variantCache[variantId]) {
+     applyVariant(productHandle, _variantCache[variantId]);
+     return;
+   }
+
+
+   fetch('/variants/' + variantId + '.js')
+     .then(function(r) { return r.json(); })
+     .then(function(variant) {
+       _variantCache[variantId] = variant;
+       applyVariant(productHandle, variant);
+     });
+ }
+
+
+ function applyVariant(productHandle, variant) {
+   const prefix = getVariantPrefix(productHandle, variant.title);
+   const parts = variant.title.split(' / ');
+   const color = parts[0].toLowerCase().replace(/\s+/g, '-');
+   const fallbackPrefix = productHandle + '-' + color + '-the-set';
+   filterGallery(prefix, fallbackPrefix);
+ }
+
+
+ function setDefaultVariant() {
+   const productHandle = getProductHandle();
+   if (!productHandle) return;
+
+
+   fetch(window.location.pathname + '.js')
+     .then(function(r) { return r.json(); })
+     .then(function(product) {
+       const variants = product.variants;
+       // Cache all variants upfront
+       for (let i = 0; i < variants.length; i++) {
+         _variantCache[variants[i].id] = variants[i];
+       }
+
+
+       let defaultVariant = null;
+       for (let i = 0; i < variants.length; i++) {
+         const t = variants[i].title.toLowerCase();
+         if (!defaultVariant && t.includes('the set')) { defaultVariant = variants[i]; break; }
+         if (!defaultVariant && t.includes('grande')) defaultVariant = variants[i];
+       }
+       if (!defaultVariant) defaultVariant = variants[0];
+
+
+       const input = document.querySelector('input[name="id"][value="' + defaultVariant.id + '"]');
+       if (input) {
+         input.checked = true;
+         input.dispatchEvent(new Event('change', { bubbles: true }));
+       }
+
+
+       applyVariant(productHandle, defaultVariant);
+     });
+ }
+
+
+ function initScrollListener() {
+   getDOM();
+   if (!_slider) return;
+
+
+   let ticking = false;
+   _slider.addEventListener('scroll', function() {
+     if (ticking) return;
+     ticking = true;
+     requestAnimationFrame(function() {
+       ticking = false;
+       const visibleItems = [];
+       for (let i = 0; i < _mediaItems.length; i++) {
+         if (_mediaItems[i].style.display !== 'none') visibleItems.push(_mediaItems[i]);
+       }
+       if (!visibleItems.length) return;
+       const activeIndex = Math.round(_slider.scrollLeft / visibleItems[0].offsetWidth);
+       const dots = document.querySelectorAll('.lumoir-dots .dot');
+       for (let i = 0; i < dots.length; i++) {
+         dots[i].classList.toggle('active', i === activeIndex);
+       }
+     });
+   }, { passive: true });
+ }
+
+
+ function init() {
+   document.addEventListener('change', function(e) {
+     if (e.target && e.target.name === 'id') {
+       handleVariantChange(e.target.value);
+     }
+   });
+
+
+   requestAnimationFrame(function() {
+     setDefaultVariant();
+     initScrollListener();
+   });
+ }
+
+
+ if (document.readyState === 'loading') {
+   document.addEventListener('DOMContentLoaded', init);
+ } else {
+   init();
+ }
 })();
 </script>
 
