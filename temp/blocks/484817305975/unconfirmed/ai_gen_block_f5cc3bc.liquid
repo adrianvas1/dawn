@@ -1,6 +1,368 @@
+{% doc %}
+  @prompt
+    Add two ANPC compliance badges to the footer. The first badge is for "Soluționarea Alternativă a Litigiilor" (SAL) with the ANPC logo on the left and a "DETALII" button below the text, styled with a rounded border. The second badge is for "Soluționarea Online a Litigiilor" (SOL) with a "DETALII" button below the text, also with a rounded border. Both badges should be displayed side by side, horizontally centered in the footer, with dark navy blue text. Each badge should have a configurable URL for the "DETALII" button link. The ANPC logo should be displayed in the first badge.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-anpc-badges-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 20px 0;
+  }
+
+  .ai-anpc-badges-container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .ai-anpc-badge-{{ ai_gen_id }} {
+    flex: 1;
+    min-width: 280px;
+    max-width: 380px;
+    border: {{ block.settings.border_thickness }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: 20px;
+    background-color: {{ block.settings.background_color }};
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ai-anpc-badge-content-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .ai-anpc-badge-logo-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.logo_size }}px;
+    height: {{ block.settings.logo_size }}px;
+  }
+
+  .ai-anpc-badge-logo-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ai-anpc-badge-text-{{ ai_gen_id }} {
+    flex: 1;
+  }
+
+  .ai-anpc-badge-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_font_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .ai-anpc-badge-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_font_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 4px 0 0;
+    line-height: 1.4;
+  }
+
+  .ai-anpc-badge-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: {{ block.settings.button_background_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: 600;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    border: {{ block.settings.button_border_thickness }}px solid {{ block.settings.button_border_color }};
+  }
+
+  .ai-anpc-badge-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background_color }};
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-anpc-badges-container-{{ ai_gen_id }} {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .ai-anpc-badge-{{ ai_gen_id }} {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+{% endstyle %}
+
+<anpc-badges-{{ ai_gen_id }} class="ai-anpc-badges-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-anpc-badges-container-{{ ai_gen_id }}">
+    <div class="ai-anpc-badge-{{ ai_gen_id }}">
+      <div class="ai-anpc-badge-content-{{ ai_gen_id }}">
+        {% if block.settings.anpc_logo %}
+          <div class="ai-anpc-badge-logo-{{ ai_gen_id }}">
+            <img
+              src="{{ block.settings.anpc_logo | image_url: width: 200 }}"
+              alt="ANPC Logo"
+              loading="lazy"
+              width="{{ block.settings.logo_size }}"
+              height="{{ block.settings.logo_size }}"
+            >
+          </div>
+        {% endif %}
+        <div class="ai-anpc-badge-text-{{ ai_gen_id }}">
+          <h3 class="ai-anpc-badge-title-{{ ai_gen_id }}">{{ block.settings.sal_title }}</h3>
+          {% if block.settings.sal_subtitle != blank %}
+            <p class="ai-anpc-badge-subtitle-{{ ai_gen_id }}">{{ block.settings.sal_subtitle }}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% if block.settings.sal_link != blank %}
+        <a href="{{ block.settings.sal_link }}" class="ai-anpc-badge-button-{{ ai_gen_id }}">
+          {{ block.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="ai-anpc-badge-{{ ai_gen_id }}">
+      <div class="ai-anpc-badge-content-{{ ai_gen_id }}">
+        <div class="ai-anpc-badge-text-{{ ai_gen_id }}">
+          <h3 class="ai-anpc-badge-title-{{ ai_gen_id }}">{{ block.settings.sol_title }}</h3>
+          {% if block.settings.sol_subtitle != blank %}
+            <p class="ai-anpc-badge-subtitle-{{ ai_gen_id }}">{{ block.settings.sol_subtitle }}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% if block.settings.sol_link != blank %}
+        <a href="{{ block.settings.sol_link }}" class="ai-anpc-badge-button-{{ ai_gen_id }}">
+          {{ block.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</anpc-badges-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AnpcBadges{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+    }
+
+    customElements.define('anpc-badges-{{ ai_gen_id }}', AnpcBadges{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "ANPC compliance badges",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "SAL badge"
+    },
+    {
+      "type": "text",
+      "id": "sal_title",
+      "label": "SAL title",
+      "default": "Soluționarea Alternativă a Litigiilor"
+    },
+    {
+      "type": "text",
+      "id": "sal_subtitle",
+      "label": "SAL subtitle"
+    },
+    {
+      "type": "url",
+      "id": "sal_link",
+      "label": "SAL link"
+    },
+    {
+      "type": "header",
+      "content": "SOL badge"
+    },
+    {
+      "type": "text",
+      "id": "sol_title",
+      "label": "SOL title",
+      "default": "Soluționarea Online a Litigiilor"
+    },
+    {
+      "type": "text",
+      "id": "sol_subtitle",
+      "label": "SOL subtitle"
+    },
+    {
+      "type": "url",
+      "id": "sol_link",
+      "label": "SOL link"
+    },
+    {
+      "type": "header",
+      "content": "ANPC logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "anpc_logo",
+      "label": "ANPC logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Logo size",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "DETALII"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "button_border_thickness",
+      "label": "Border thickness",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Background color",
+      "default": "#1a3a52"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border color",
+      "default": "#1a3a52"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background_color",
+      "label": "Hover background color",
+      "default": "#0f2a3d"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Badge style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1a3a52"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "label": "Subtitle font size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "border_thickness",
+      "label": "Border thickness",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#1a3a52"
+    }
+  ],
+  "presets": [
+    {
+      "name": "ANPC compliance badges"
+    }
+  ]
+}
 {% endschema %}
