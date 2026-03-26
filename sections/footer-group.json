@@ -42,6 +42,13 @@
             "subtext": "<p>Design minimalist, inspirat de armonia formelor sculpturale. Creăm piese premium și eco-friendly care îmbină estetica modernă cu spiritul artizanal, prin detalii care dau personalitate casei tale, adăugând eleganță și căldură.</p>"
           }
         },
+        "text_kJrfzY": {
+          "type": "text",
+          "settings": {
+            "heading": "Heading",
+            "subtext": "<p>Share contact information, store details, and brand content with your customers.</p>"
+          }
+        },
         "image_xGQrUk": {
           "type": "image",
           "settings": {
@@ -66,6 +73,7 @@
         "footer-1",
         "text_AajDbc",
         "footer-2",
+        "text_kJrfzY",
         "image_xGQrUk",
         "image_Tq6FaY"
       ],

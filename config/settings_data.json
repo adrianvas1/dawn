@@ -419,8 +419,6 @@
     }
   },
   "platform_customizations": {
-    "custom_css": [
-      ".footer-block--anpc {flex: 0 0 auto !important; width: auto !important;}"
-    ]
+    "custom_css": []
   }
 }
