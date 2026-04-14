@@ -109,6 +109,7 @@
         },
         "featured_collection_VEnCGj": {
           "type": "featured_collection",
+          "disabled": true,
           "settings": {
             "collection": "seturi-cadou"
           }
