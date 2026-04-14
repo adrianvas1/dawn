@@ -44,7 +44,8 @@
         "buttons_GARcXa"
       ],
       "custom_css": [
-        ".banner__content.color-scheme-1 {background-color: rgba(0, 0, 0, 0.2);}"
+        ".banner__box {background-color: rgba(0, 0, 0, 0.2) !important;}",
+        ".banner__heading {opacity: 1 !important;}"
       ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
