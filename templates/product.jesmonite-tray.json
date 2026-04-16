@@ -77,7 +77,7 @@
         "collapsible-row-2": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Dimensions",
+            "heading": "Dimensiuni",
             "icon": "ruler",
             "content": "{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'lungime' }}{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'latime' }}{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'inaltime' }}",
             "page": ""
