@@ -70,7 +70,7 @@
           "settings": {
             "heading": "Dimensiuni",
             "icon": "ruler",
-            "content": "{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'lungime' }}{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'latime' }}{{ block.settings.page.metafields.custom.dimensiuni | metafield_tag: field: 'inaltime' }}",
+            "content": "{{ product.metafields.custom.dimensiuni | metafield_tag }}",
             "page": ""
           }
         },
