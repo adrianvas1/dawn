@@ -2314,11 +2314,27 @@
 
 
  function getVariantPrefix(productHandle, variantTitle) {
-   const parts = variantTitle.split(' / ');
-   const color = parts[0].toLowerCase().replace(/\s+/g, '-');
-   const size = parts[parts.length - 1].toLowerCase().replace(/\s+/g, '-');
-   return productHandle + '-' + color + '-' + size;
- }
+  const normalize = value =>
+    String(value || '').trim().toLowerCase().replace(/\s+/g, '-');
+
+  const parts = variantTitle.split(' / ').map(normalize);
+  const galleryOptions = new Set([
+    'leafy',
+    'ribbed',
+    'dotted',
+    'the-set',
+    'petite',
+    'midi',
+    'grande'
+  ]);
+
+  const color = parts[0];
+  const modelOrSize = parts.slice(1).find(
+    option => galleryOptions.has(option)
+  ) || parts[parts.length - 1];
+
+  return `${productHandle}-${color}-${modelOrSize}`;
+}
 
 
  function filterGallery(prefix, fallbackPrefix) {
