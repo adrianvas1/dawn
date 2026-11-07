@@ -35,6 +35,19 @@ if (!customElements.get('media-gallery')) {
         if (!activeMedia) {
           return;
         }
+        // Reveal the requested image even when a gallery filter hid it.
+        activeMedia.style.removeProperty('display');
+        activeMedia.hidden = false;
+
+        const matchingThumbnail = this.elements.thumbnails?.querySelector(
+          `[data-target="${mediaId}"]`
+        );
+
+        matchingThumbnail?.style.removeProperty('display');
+
+        if (this.elements.viewer.slider) {
+          this.elements.viewer.resetPages();
+        }
         this.elements.viewer.querySelectorAll('[data-media-id]').forEach((element) => {
           element.classList.remove('is-active');
         });
