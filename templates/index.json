@@ -287,6 +287,39 @@
       "settings": {
         "include_margins": true
       }
+    },
+    "17952010891dd8fe81": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_885b10e_nQ6rRG": {
+          "type": "ai_gen_block_885b10e",
+          "settings": {
+            "heading": "Calculator Jesmonite",
+            "introduction": "De la idee la cantitatea potrivită.",
+            "product_label": "Tip Jesmonite",
+            "powder_label": "Pulbere (g)",
+            "liquid_label": "Lichid (g)",
+            "total_label": "Amestec total (g)",
+            "water_label": "Apă în matriță (g)",
+            "equation_text": "Pulbere + lichid = amestec total",
+            "help_text": "Cântărește matrița goală, adu cântarul la zero și umple-o cu apă până la nivelul de turnare. Introdu masa apei.",
+            "note_text": "Cantitățile sunt orientative. Verifică instrucțiunile producătorului pentru materialul folosit.",
+            "invalid_message": "Introdu o valoare numerică finită, zero sau mai mare.",
+            "reset_label": "Resetează",
+            "desktop_width_percent": 100,
+            "background_color": "#f7f5f2",
+            "text_color": "#2d2926",
+            "accent_color": "#594733",
+            "line_color": "#c9c1b7",
+            "error_color": "#8b1e16"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_885b10e_nQ6rRG"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -300,6 +333,7 @@
     "1768083315563cafb1",
     "1773771767a4a98bcc",
     "17745105039ce1c4d4",
-    "1776153027ca876d5a"
+    "1776153027ca876d5a",
+    "17952010891dd8fe81"
   ]
 }
