@@ -1,6 +1,144 @@
+{% doc %}
+  @prompt
+    Creează un calculator Jesmonite original în română pentru pagina dedicată Calculator Jesmonite. Design premium de atelier Lumoir Studio, nu copia aspectul roz sau personajul de pe jesmonitecalculator.com. Respectă tema Dawn existentă: fonturile serif moștenite din temă, fundal ivoire #f7f5f2, text cărbune cald #2d2926, accente bronz #594733, linii fine și spațiu generos, maximum 1000px. Compoziție editorială cu titlul Calculator Jesmonite și introducerea «De la idee la cantitatea potrivită.» în stânga, calculator clar în dreapta. Pe mobil o singură coloană. Fără imagini generice, badge-uri sau animații decorative. Selector AC100/AC730, câmpuri editabile Pulbere (g), Lichid (g), Amestec total (g), Apă în matriță (g); relația pulbere + lichid = amestec vizibilă, rezultate evidențiate discret, buton Resetează. Orice câmp modificat recalculează celelalte imediat. Formule din calculatorul de referință: pentru AC100 raport pulbere/lichid r=2.5, factor amestec/apă f=1.75; AC730 r=5, f=1.95. Din total T: lichid=T/(r+1), pulbere=T*r/(r+1), apă=T/f. Din apă A: T=A*f. Din pulbere P: lichid=P/r și T=P+lichid. Din lichid L: pulbere=L*r și T=L+pulbere. Nu reproduce eroarea de pe referință care înmulțește totalul cu factorul pentru a obține apa. Precizie internă completă, afișare maximum două zecimale, acceptă virgulă sau punct zecimal, zero valid, valori negative și nefinite respinse cu explicație accesibilă, câmp gol golește rezultatele. Schimbarea produsului resetează toate valorile. Fără bucle de recalculare sau mutarea cursorului în câmpul editat. Exemplu de test AC100: 100g apă =175g total=125g pulbere+50g lichid; AC730: 100g apă=195g total=162.5g pulbere+32.5g lichid. Ajutor «Cântărește matrița goală, adu cântarul la zero și umple-o cu apă până la nivelul de turnare. Introdu masa apei.» și notă «Cantitățile sunt orientative. Verifică instrucțiunile producătorului pentru materialul folosit.» Toate textele și culorile personalizabile, etichete permanente, contrast bun, focus vizibil, rezultate accesibile fără anunțuri excesive. Nu modifica stilurile globale sau alte pagini. Acest bloc trebuie adăugat exclusiv pe un șablon dedicat paginii Calculator Jesmonite, nu pe pagina de pornire sau șablonul comun tuturor paginilor.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-jesmonite-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 64px 28px;
+    color: {{ block.settings.text_color }};
+    background: {{ block.settings.background_color }};
+    box-sizing: border-box;
+  }
+  .ai-jesmonite-{{ ai_gen_id }} *, .ai-jesmonite-{{ ai_gen_id }} *::before, .ai-jesmonite-{{ ai_gen_id }} *::after { box-sizing: border-box; }
+  .ai-jesmonite-{{ ai_gen_id }}__layout { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: start; }
+  .ai-jesmonite-{{ ai_gen_id }}__intro { padding-top: 18px; }
+  .ai-jesmonite-{{ ai_gen_id }} h1 { margin: 0 0 16px; color: inherit; font: inherit; font-size: clamp(32px, 4vw, 48px); line-height: 1.12; letter-spacing: -0.03em; }
+  .ai-jesmonite-{{ ai_gen_id }}__lead { margin: 0; color: inherit; font-size: 19px; line-height: 1.55; }
+  .ai-jesmonite-{{ ai_gen_id }}__panel { border: 1px solid {{ block.settings.line_color }}; padding: 28px; }
+  .ai-jesmonite-{{ ai_gen_id }}__product { margin-bottom: 26px; }
+  .ai-jesmonite-{{ ai_gen_id }} label, .ai-jesmonite-{{ ai_gen_id }}__field-label { display: block; margin-bottom: 8px; color: {{ block.settings.text_color }}; font-size: 14px; }
+  .ai-jesmonite-{{ ai_gen_id }} select, .ai-jesmonite-{{ ai_gen_id }} input { width: 100%; min-height: 48px; padding: 11px 13px; border: 1px solid {{ block.settings.line_color }}; border-radius: 0; background: {{ block.settings.background_color }}; color: {{ block.settings.text_color }}; font: inherit; font-size: 16px; }
+  .ai-jesmonite-{{ ai_gen_id }} select:focus-visible, .ai-jesmonite-{{ ai_gen_id }} input:focus-visible, .ai-jesmonite-{{ ai_gen_id }} button:focus-visible { outline: 3px solid {{ block.settings.accent_color }}; outline-offset: 3px; }
+  .ai-jesmonite-{{ ai_gen_id }}__fields { display: grid; gap: 18px; }
+  .ai-jesmonite-{{ ai_gen_id }}__equation { margin: 18px 0 0; padding: 13px 0; border-top: 1px solid {{ block.settings.line_color }}; border-bottom: 1px solid {{ block.settings.line_color }}; color: {{ block.settings.accent_color }}; text-align: center; font-size: 14px; }
+  .ai-jesmonite-{{ ai_gen_id }}__help, .ai-jesmonite-{{ ai_gen_id }}__note { margin: 18px 0 0; font-size: 13px; line-height: 1.6; }
+  .ai-jesmonite-{{ ai_gen_id }}__note { color: {{ block.settings.text_color }}; opacity: .88; }
+  .ai-jesmonite-{{ ai_gen_id }}__error { margin: 12px 0 0; color: {{ block.settings.error_color }}; font-size: 14px; }
+  .ai-jesmonite-{{ ai_gen_id }}__actions { display: flex; justify-content: flex-end; margin-top: 22px; }
+  .ai-jesmonite-{{ ai_gen_id }} button { padding: 10px 18px; border: 1px solid {{ block.settings.accent_color }}; background: transparent; color: {{ block.settings.accent_color }}; font: inherit; cursor: pointer; }
+  .ai-jesmonite-{{ ai_gen_id }} button:hover { background: {{ block.settings.accent_color }}; color: {{ block.settings.background_color }}; }
+  @media screen and (max-width: 749px) {
+    .ai-jesmonite-{{ ai_gen_id }} { padding: 40px 20px; }
+    .ai-jesmonite-{{ ai_gen_id }}__layout { grid-template-columns: 1fr; gap: 28px; }
+    .ai-jesmonite-{{ ai_gen_id }}__intro { padding-top: 0; }
+    .ai-jesmonite-{{ ai_gen_id }}__panel { padding: 20px; }
+  }
+{% endstyle %}
+
+<jesmonite-calculator-{{ ai_gen_id }} class="ai-jesmonite-{{ ai_gen_id }}" style="width: {{ block.settings.desktop_width_percent }}%;" {{ block.shopify_attributes }}>
+  <div class="ai-jesmonite-{{ ai_gen_id }}__layout">
+    <header class="ai-jesmonite-{{ ai_gen_id }}__intro">
+      <h1>{{ block.settings.heading | escape }}</h1>
+      <p class="ai-jesmonite-{{ ai_gen_id }}__lead">{{ block.settings.introduction | escape }}</p>
+    </header>
+    <div class="ai-jesmonite-{{ ai_gen_id }}__panel">
+      <div class="ai-jesmonite-{{ ai_gen_id }}__product">
+        <label for="ai-jes-product-{{ ai_gen_id }}">{{ block.settings.product_label | escape }}</label>
+        <select id="ai-jes-product-{{ ai_gen_id }}" data-product>
+          <option value="ac100">AC100</option>
+          <option value="ac730">AC730</option>
+        </select>
+      </div>
+      <div class="ai-jesmonite-{{ ai_gen_id }}__fields">
+        <div><label for="ai-jes-powder-{{ ai_gen_id }}">{{ block.settings.powder_label | escape }}</label><input id="ai-jes-powder-{{ ai_gen_id }}" data-field="powder" type="text" inputmode="decimal" autocomplete="off" aria-describedby="ai-jes-error-{{ ai_gen_id }}" /></div>
+        <div><label for="ai-jes-liquid-{{ ai_gen_id }}">{{ block.settings.liquid_label | escape }}</label><input id="ai-jes-liquid-{{ ai_gen_id }}" data-field="liquid" type="text" inputmode="decimal" autocomplete="off" aria-describedby="ai-jes-error-{{ ai_gen_id }}" /></div>
+        <div><label for="ai-jes-total-{{ ai_gen_id }}">{{ block.settings.total_label | escape }}</label><input id="ai-jes-total-{{ ai_gen_id }}" data-field="total" type="text" inputmode="decimal" autocomplete="off" aria-describedby="ai-jes-error-{{ ai_gen_id }}" /></div>
+        <div><label for="ai-jes-water-{{ ai_gen_id }}">{{ block.settings.water_label | escape }}</label><input id="ai-jes-water-{{ ai_gen_id }}" data-field="water" type="text" inputmode="decimal" autocomplete="off" aria-describedby="ai-jes-error-{{ ai_gen_id }}" /></div>
+      </div>
+      <p class="ai-jesmonite-{{ ai_gen_id }}__equation">{{ block.settings.equation_text | escape }}</p>
+      <p class="ai-jesmonite-{{ ai_gen_id }}__help">{{ block.settings.help_text | escape }}</p>
+      <p class="ai-jesmonite-{{ ai_gen_id }}__note">{{ block.settings.note_text | escape }}</p>
+      <p class="ai-jesmonite-{{ ai_gen_id }}__error" id="ai-jes-error-{{ ai_gen_id }}" data-error role="status" aria-live="polite"></p>
+      <div class="ai-jesmonite-{{ ai_gen_id }}__actions"><button type="button" data-reset>{{ block.settings.reset_label | escape }}</button></div>
+    </div>
+  </div>
+</jesmonite-calculator-{{ ai_gen_id }}>
+
+<script>
+  (() => {
+    const tagName = 'jesmonite-calculator-{{ ai_gen_id }}';
+    if (customElements.get(tagName)) return;
+    class JesmoniteCalculator extends HTMLElement {
+      connectedCallback() {
+        this.inputs = Array.from(this.querySelectorAll('[data-field]'));
+        this.product = this.querySelector('[data-product]');
+        this.error = this.querySelector('[data-error]');
+        this.inputs.forEach((input) => input.addEventListener('input', () => this.calculate(input)));
+        this.product.addEventListener('change', () => this.reset());
+        this.querySelector('[data-reset]').addEventListener('click', () => this.reset());
+      }
+      calculate(changed) {
+        this.error.textContent = '';
+        const raw = changed.value.trim();
+        if (raw === '') { this.clearOthers(changed); return; }
+        const parsed = Number(raw.replace(',', '.'));
+        if (!Number.isFinite(parsed) || parsed < 0) {
+          this.error.textContent = {{ block.settings.invalid_message | json }};
+          changed.setAttribute('aria-invalid', 'true');
+          this.clearOthers(changed);
+          return;
+        }
+        changed.removeAttribute('aria-invalid');
+        const ratio = this.product.value === 'ac100' ? 2.5 : 5;
+        const factor = this.product.value === 'ac100' ? 1.75 : 1.95;
+        let powder, liquid, total, water;
+        if (changed.dataset.field === 'water') { water = parsed; total = water * factor; liquid = total / (ratio + 1); powder = total * ratio / (ratio + 1); }
+        else if (changed.dataset.field === 'total') { total = parsed; liquid = total / (ratio + 1); powder = total * ratio / (ratio + 1); water = total / factor; }
+        else if (changed.dataset.field === 'powder') { powder = parsed; liquid = powder / ratio; total = powder + liquid; water = total / factor; }
+        else { liquid = parsed; powder = liquid * ratio; total = liquid + powder; water = total / factor; }
+        const values = { powder, liquid, total, water };
+        this.inputs.forEach((input) => { if (input !== changed) input.value = this.format(values[input.dataset.field]); });
+        changed.value = raw;
+      }
+      format(value) { return Number(value.toFixed(2)).toString(); }
+      clearOthers(changed) { this.inputs.forEach((input) => { if (input !== changed) input.value = ''; }); }
+      reset() { this.inputs.forEach((input) => { input.value = ''; input.removeAttribute('aria-invalid'); }); this.error.textContent = ''; }
+    }
+    customElements.define(tagName, JesmoniteCalculator);
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Calculator Jesmonite",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Titlu", "default": "Calculator Jesmonite" },
+    { "type": "text", "id": "introduction", "label": "Introducere", "default": "De la idee la cantitatea potrivită." },
+    { "type": "text", "id": "product_label", "label": "Etichetă produs", "default": "Tip Jesmonite" },
+    { "type": "text", "id": "powder_label", "label": "Etichetă pulbere", "default": "Pulbere (g)" },
+    { "type": "text", "id": "liquid_label", "label": "Etichetă lichid", "default": "Lichid (g)" },
+    { "type": "text", "id": "total_label", "label": "Etichetă amestec", "default": "Amestec total (g)" },
+    { "type": "text", "id": "water_label", "label": "Etichetă apă", "default": "Apă în matriță (g)" },
+    { "type": "text", "id": "equation_text", "label": "Relația amestecului", "default": "Pulbere + lichid = amestec total" },
+    { "type": "text", "id": "help_text", "label": "Ajutor pentru măsurare", "default": "Cântărește matrița goală, adu cântarul la zero și umple-o cu apă până la nivelul de turnare. Introdu masa apei." },
+    { "type": "text", "id": "note_text", "label": "Notă", "default": "Cantitățile sunt orientative. Verifică instrucțiunile producătorului pentru materialul folosit." },
+    { "type": "text", "id": "invalid_message", "label": "Mesaj de valoare invalidă", "default": "Introdu o valoare numerică finită, zero sau mai mare." },
+    { "type": "text", "id": "reset_label", "label": "Buton resetare", "default": "Resetează" },
+    { "type": "range", "id": "desktop_width_percent", "label": "Desktop width", "min": 50, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "color", "id": "background_color", "label": "Fundal", "default": "#f7f5f2" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#2d2926" },
+    { "type": "color", "id": "accent_color", "label": "Accent bronz", "default": "#594733" },
+    { "type": "color", "id": "line_color", "label": "Linii", "default": "#c9c1b7" },
+    { "type": "color", "id": "error_color", "label": "Mesaj de eroare", "default": "#8b1e16" }
+  ],
+  "presets": [{ "name": "Calculator Jesmonite" }],
+  "tag": null,
+  "class": "lumoir-jesmonite-calculator"
+}
 {% endschema %}
