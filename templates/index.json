@@ -22,8 +22,8 @@
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
-        "collection": "all",
-        "products_to_show": 8,
+        "collection": "colecția-de-craciun",
+        "products_to_show": 15,
         "title": "Produse recomandate",
         "heading_size": "h1",
         "description": "<p>O selecție specială de produse pentru tine<br/></p>",
