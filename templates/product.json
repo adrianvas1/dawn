@@ -52,13 +52,6 @@
             "show_gift_card_recipient": false
           }
         },
-        "text_ExVUAb": {
-          "type": "text",
-          "settings": {
-            "text": "Pregătire: 2–4 zile lucrătoare. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Transport de la 15,90 lei · Gratuit peste 299 lei",
-            "text_style": "uppercase"
-          }
-        },
         "description": {
           "type": "description",
           "settings": {}
@@ -118,7 +111,6 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
-        "text_ExVUAb",
         "description",
         "collapsible-row-0",
         "collapsible-row-2",
